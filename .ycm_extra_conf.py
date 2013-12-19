@@ -54,11 +54,12 @@ flags = [
 # language that the files to be compiled are written in. This is mostly
 # relevant for c++ headers.
 # For a C project, you would set this to 'c' instead of 'c++'.
-'c++',
-'-I/usr/include',
-'-I/usr/include/c++/4.7',
-'-I/usr/lib/gcc/x86_64-linux-gnu/4.7/include',
-'-I/usr/include/c++/4.7/x86_64-linux-gnu'
+'-x',
+'c++'
+#'-I/usr/include',
+#'-I/usr/include/c++/4.7',
+#'-I/usr/lib/gcc/x86_64-linux-gnu/4.7/include',
+#'-I/usr/include/c++/4.7/x86_64-linux-gnu'
 ]
 
 # Set this to the absolute path to the folder (NOT the file!) containing the

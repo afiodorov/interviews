@@ -6,7 +6,15 @@ CCFLAGS  = -g -Wall -std=c++11
 out/%: src/%.cpp
 	   $(CC) $(CCFLAGS) -o $@ $<
 
-executable: $(OBJ_FILES)
+all: $(OBJ_FILES)
+
+out/addLinkedLists out/nthLinkedListElement out/removeDuplicatesLinked : src/includes/linkedlist.cpp src/includes/node.cpp
+
+out/nthLinkedListElement : src/includes/queue.cpp
+
+out/stacktest : src/includes/stack.cpp
+
+out/weakPtrBlob : src/includes/Blob.h src/includes/Blobit.h
 
 clean:
 	rm out/*
