@@ -1,0 +1,137 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+BLOBIT_H	Blobit.h	2;"	d
+BLOBIT_H	blobit.h	2;"	d
+BLOB_H	Blob.h	2;"	d
+Blob	Blob.h	/^	Blob() {};$/;"	f	class:Blob	access:public	signature:()
+Blob	Blob.h	/^	Blob(std::initializer_list<T> il) {data(std::make_shared(std::vector<T>(il)));};$/;"	f	class:Blob	access:public	signature:(std::initializer_list<T> il)
+Blob	Blob.h	/^class Blob {$/;"	c
+Blob::Blob	Blob.h	/^	Blob() {};$/;"	f	class:Blob	access:public	signature:()
+Blob::Blob	Blob.h	/^	Blob(std::initializer_list<T> il) {data(std::make_shared(std::vector<T>(il)));};$/;"	f	class:Blob	access:public	signature:(std::initializer_list<T> il)
+Blob::back	Blob.h	/^	T& back() const {$/;"	f	class:Blob	access:public	signature:() const
+Blob::check	Blob.h	/^	void check(size_type i, const std::string &msg) const {$/;"	f	class:Blob	access:private	signature:(size_type i, const std::string &msg) const
+Blob::data	Blob.h	/^	std::shared_ptr<std::vector<T>> data;$/;"	m	class:Blob	access:private
+Blob::empty	Blob.h	/^	bool empty() const { return data->empty(); }$/;"	f	class:Blob	access:public	signature:() const
+Blob::front	Blob.h	/^	T& front() const {$/;"	f	class:Blob	access:public	signature:() const
+Blob::pop_back	Blob.h	/^	void pop_back() {$/;"	f	class:Blob	access:public	signature:()
+Blob::push_back	Blob.h	/^	void push_back(const T& t) { data->push_back(t); }$/;"	f	class:Blob	access:public	signature:(const T& t)
+Blob::size	Blob.h	/^	size_type size() const { return data->size(); }$/;"	f	class:Blob	access:public	signature:() const
+Blob::size_type	Blob.h	/^	typedef typename std::vector<T>::size_type size_type;$/;"	t	class:Blob	access:private
+BlobIt	Blobit.h	/^	BlobIt() : curr(0) {}$/;"	f	class:BlobIt	access:private	signature:()
+BlobIt	Blobit.h	/^	BlobIt(const Blob<T>& a, size_type sz=0) : wptr(a.data), curr(sz) {}$/;"	f	class:BlobIt	access:private	signature:(const Blob<T>& a, size_type sz=0)
+BlobIt	Blobit.h	/^class BlobIt {$/;"	c
+BlobIt	blobit.h	/^	BlobIt() : curr(0) {};$/;"	f	class:BlobIt	access:private	signature:()
+BlobIt	blobit.h	/^	BlobIt(Blob<T>&a, size_type sz=0) : wptr(a.data), curr(sz) {};$/;"	f	class:BlobIt	access:private	signature:(Blob<T>&a, size_type sz=0)
+BlobIt	blobit.h	/^class BlobIt {$/;"	c
+BlobIt::BlobIt	Blobit.h	/^	BlobIt() : curr(0) {}$/;"	f	class:BlobIt	access:private	signature:()
+BlobIt::BlobIt	Blobit.h	/^	BlobIt(const Blob<T>& a, size_type sz=0) : wptr(a.data), curr(sz) {}$/;"	f	class:BlobIt	access:private	signature:(const Blob<T>& a, size_type sz=0)
+BlobIt::BlobIt	blobit.h	/^	BlobIt() : curr(0) {};$/;"	f	class:BlobIt	access:private	signature:()
+BlobIt::BlobIt	blobit.h	/^	BlobIt(Blob<T>&a, size_type sz=0) : wptr(a.data), curr(sz) {};$/;"	f	class:BlobIt	access:private	signature:(Blob<T>&a, size_type sz=0)
+BlobIt::curr	Blobit.h	/^	size_type curr;$/;"	m	class:BlobIt	access:private
+BlobIt::curr	blobit.h	/^	size_type curr;$/;"	m	class:BlobIt	access:private
+BlobIt::size_type	Blobit.h	/^	typedef typename std::vector<T>::size_type size_type;$/;"	t	class:BlobIt	access:private
+BlobIt::size_type	blobit.h	/^	typedef typename std::vector<T>::size_type size_type;$/;"	t	class:BlobIt	access:private
+BlobIt::wptr	Blobit.h	/^	std::weak_ptr<T> wptr;$/;"	m	class:BlobIt	access:private
+BlobIt::wptr	blobit.h	/^	std::weak_ptr<T> wptr;$/;"	m	class:BlobIt	access:private
+COMMONBLOB_H	commonblob.h	2;"	d
+LinkedList	linkedlist.cpp	/^		LinkedList() : head(0) {$/;"	f	class:LinkedList	access:public	signature:()
+LinkedList	linkedlist.cpp	/^		LinkedList(Node<T>* node) {$/;"	f	class:LinkedList	access:public	signature:(Node<T>* node)
+LinkedList	linkedlist.cpp	/^class LinkedList{$/;"	c	file:
+LinkedList::LinkedList	linkedlist.cpp	/^		LinkedList() : head(0) {$/;"	f	class:LinkedList	access:public	signature:()
+LinkedList::LinkedList	linkedlist.cpp	/^		LinkedList(Node<T>* node) {$/;"	f	class:LinkedList	access:public	signature:(Node<T>* node)
+LinkedList::addNode	linkedlist.cpp	/^		void addNode(Node<T>* node) {$/;"	f	class:LinkedList	access:public	signature:(Node<T>* node)
+LinkedList::getHead	linkedlist.cpp	/^		Node<T>* getHead() const {$/;"	f	class:LinkedList	access:public	signature:() const
+LinkedList::getHead	linkedlist.cpp	/^		Node<T>* getHead() {$/;"	f	class:LinkedList	access:public	signature:()
+LinkedList::head	linkedlist.cpp	/^		Node<T>* head;$/;"	m	class:LinkedList	file:	access:private
+LinkedList::operator const int	linkedlist.cpp	/^		operator const int() {$/;"	f	class:LinkedList	access:public	signature:()
+LinkedList::operator const int	linkedlist.cpp	/^LinkedList<int>::operator const int() { $/;"	f	class:LinkedList	signature:()
+LinkedList::removeNode	linkedlist.cpp	/^		void removeNode() {$/;"	f	class:LinkedList	access:public	signature:()
+LinkedList::show	linkedlist.cpp	/^		std::ostream& show(std::ostream & out) const {$/;"	f	class:LinkedList	access:public	signature:(std::ostream & out) const
+LinkedList::~LinkedList	linkedlist.cpp	/^		virtual ~LinkedList() {$/;"	f	class:LinkedList	access:public	signature:()
+Node	node.cpp	/^	Node() : next(0) {$/;"	f	class:Node	access:public	signature:()
+Node	node.cpp	/^	Node(const T& node) : next(0) {$/;"	f	class:Node	access:public	signature:(const T& node)
+Node	node.cpp	/^class Node {$/;"	c	file:
+Node::Node	node.cpp	/^	Node() : next(0) {$/;"	f	class:Node	access:public	signature:()
+Node::Node	node.cpp	/^	Node(const T& node) : next(0) {$/;"	f	class:Node	access:public	signature:(const T& node)
+Node::data	node.cpp	/^	T* data;$/;"	m	class:Node	file:	access:private
+Node::getData	node.cpp	/^	const T& getData() const {$/;"	f	class:Node	access:public	signature:() const
+Node::getNext	node.cpp	/^	Node* getNext() const {$/;"	f	class:Node	access:public	signature:() const
+Node::next	node.cpp	/^	Node* next;$/;"	m	class:Node	file:	access:private
+Node::operator =	node.cpp	/^	Node& operator= (const Node& rhs) {$/;"	f	class:Node	access:public	signature:(const Node& rhs)
+Node::operator ==	node.cpp	/^	bool operator== (const Node& rhs) const {$/;"	f	class:Node	access:public	signature:(const Node& rhs) const
+Node::setNext	node.cpp	/^	void setNext(Node* in) {$/;"	f	class:Node	access:public	signature:(Node* in)
+Node::show	node.cpp	/^	std::ostream& show(std::ostream& out) const {$/;"	f	class:Node	access:public	signature:(std::ostream& out) const
+Node::~Node	node.cpp	/^	virtual ~Node() {$/;"	f	class:Node	access:public	signature:()
+Que	queue.cpp	/^	Que(const size_t& size) : size(size) {$/;"	f	class:Que	access:public	signature:(const size_t& size)
+Que	queue.cpp	/^class Que {$/;"	c	file:
+Que::Que	queue.cpp	/^	Que(const size_t& size) : size(size) {$/;"	f	class:Que	access:public	signature:(const size_t& size)
+Que::arr	queue.cpp	/^	T* arr;$/;"	m	class:Que	file:	access:private
+Que::begin	queue.cpp	/^	size_t begin, end;$/;"	m	class:Que	file:	access:private
+Que::end	queue.cpp	/^	size_t begin, end;$/;"	m	class:Que	file:	access:private
+Que::front	queue.cpp	/^	T front() const {$/;"	f	class:Que	access:public	signature:() const
+Que::pop	queue.cpp	/^	T pop() {$/;"	f	class:Que	access:public	signature:()
+Que::push	queue.cpp	/^	void push(const T element) {$/;"	f	class:Que	access:public	signature:(const T element)
+Que::show	queue.cpp	/^	std::ostream& show(std::ostream & out) const {$/;"	f	class:Que	access:public	signature:(std::ostream & out) const
+Que::size	queue.cpp	/^	const size_t size;$/;"	m	class:Que	file:	access:private
+Que::~Que	queue.cpp	/^	virtual ~Que() {$/;"	f	class:Que	access:public	signature:()
+Stack	stack.cpp	/^	Stack() : top(0) {};$/;"	f	class:Stack	access:public	signature:()
+Stack	stack.cpp	/^class Stack{$/;"	c	file:
+Stack::Stack	stack.cpp	/^	Stack() : top(0) {};$/;"	f	class:Stack	access:public	signature:()
+Stack::pop	stack.cpp	/^	sNode<T> pop() {$/;"	f	class:Stack	access:public	signature:()
+Stack::push	stack.cpp	/^	void push(sNode<T> node) {$/;"	f	class:Stack	access:public	signature:(sNode<T> node)
+Stack::show	stack.cpp	/^	std::ostream& show(std::ostream& out) const {$/;"	f	class:Stack	access:public	signature:(std::ostream& out) const
+Stack::top	stack.cpp	/^	sNode<T> top;$/;"	m	class:Stack	file:	access:private
+addNode	linkedlist.cpp	/^		void addNode(Node<T>* node) {$/;"	f	class:LinkedList	access:public	signature:(Node<T>* node)
+arr	queue.cpp	/^	T* arr;$/;"	m	class:Que	file:	access:private
+back	Blob.h	/^	T& back() const {$/;"	f	class:Blob	access:public	signature:() const
+begin	queue.cpp	/^	size_t begin, end;$/;"	m	class:Que	file:	access:private
+check	Blob.h	/^	void check(size_type i, const std::string &msg) const {$/;"	f	class:Blob	access:private	signature:(size_type i, const std::string &msg) const
+curr	Blobit.h	/^	size_type curr;$/;"	m	class:BlobIt	access:private
+curr	blobit.h	/^	size_type curr;$/;"	m	class:BlobIt	access:private
+data	Blob.h	/^	std::shared_ptr<std::vector<T>> data;$/;"	m	class:Blob	access:private
+data	node.cpp	/^	T* data;$/;"	m	class:Node	file:	access:private
+empty	Blob.h	/^	bool empty() const { return data->empty(); }$/;"	f	class:Blob	access:public	signature:() const
+end	queue.cpp	/^	size_t begin, end;$/;"	m	class:Que	file:	access:private
+front	Blob.h	/^	T& front() const {$/;"	f	class:Blob	access:public	signature:() const
+front	queue.cpp	/^	T front() const {$/;"	f	class:Que	access:public	signature:() const
+getData	node.cpp	/^	const T& getData() const {$/;"	f	class:Node	access:public	signature:() const
+getHead	linkedlist.cpp	/^		Node<T>* getHead() const {$/;"	f	class:LinkedList	access:public	signature:() const
+getHead	linkedlist.cpp	/^		Node<T>* getHead() {$/;"	f	class:LinkedList	access:public	signature:()
+getNext	node.cpp	/^	Node* getNext() const {$/;"	f	class:Node	access:public	signature:() const
+head	linkedlist.cpp	/^		Node<T>* head;$/;"	m	class:LinkedList	file:	access:private
+next	node.cpp	/^	Node* next;$/;"	m	class:Node	file:	access:private
+operator <<	linkedlist.cpp	/^std::ostream& operator <<(std::ostream& osObject, const LinkedList<T>& list)$/;"	f	signature:(std::ostream& osObject, const LinkedList<T>& list)
+operator <<	node.cpp	/^std::ostream& operator << (std::ostream& out, const Node<T>& node){$/;"	f	signature:(std::ostream& out, const Node<T>& node)
+operator <<	queue.cpp	/^std::ostream& operator <<(std::ostream& osObject, const Que<T>& queue)$/;"	f	signature:(std::ostream& osObject, const Que<T>& queue)
+operator <<	stack.cpp	/^std::ostream& operator<<(std::ostream& out, const Stack<T>& stack) {$/;"	f	signature:(std::ostream& out, const Stack<T>& stack)
+operator =	node.cpp	/^	Node& operator= (const Node& rhs) {$/;"	f	class:Node	access:public	signature:(const Node& rhs)
+operator ==	node.cpp	/^	bool operator== (const Node& rhs) const {$/;"	f	class:Node	access:public	signature:(const Node& rhs) const
+operator const int	linkedlist.cpp	/^		operator const int() {$/;"	f	class:LinkedList	access:public	signature:()
+operator const int	linkedlist.cpp	/^LinkedList<int>::operator const int() { $/;"	f	class:LinkedList	signature:()
+pop	queue.cpp	/^	T pop() {$/;"	f	class:Que	access:public	signature:()
+pop	stack.cpp	/^	sNode<T> pop() {$/;"	f	class:Stack	access:public	signature:()
+pop_back	Blob.h	/^	void pop_back() {$/;"	f	class:Blob	access:public	signature:()
+push	queue.cpp	/^	void push(const T element) {$/;"	f	class:Que	access:public	signature:(const T element)
+push	stack.cpp	/^	void push(sNode<T> node) {$/;"	f	class:Stack	access:public	signature:(sNode<T> node)
+push_back	Blob.h	/^	void push_back(const T& t) { data->push_back(t); }$/;"	f	class:Blob	access:public	signature:(const T& t)
+removeNode	linkedlist.cpp	/^		void removeNode() {$/;"	f	class:LinkedList	access:public	signature:()
+setNext	node.cpp	/^	void setNext(Node* in) {$/;"	f	class:Node	access:public	signature:(Node* in)
+show	linkedlist.cpp	/^		std::ostream& show(std::ostream & out) const {$/;"	f	class:LinkedList	access:public	signature:(std::ostream & out) const
+show	node.cpp	/^	std::ostream& show(std::ostream& out) const {$/;"	f	class:Node	access:public	signature:(std::ostream& out) const
+show	queue.cpp	/^	std::ostream& show(std::ostream & out) const {$/;"	f	class:Que	access:public	signature:(std::ostream & out) const
+show	stack.cpp	/^	std::ostream& show(std::ostream& out) const {$/;"	f	class:Stack	access:public	signature:(std::ostream& out) const
+size	Blob.h	/^	size_type size() const { return data->size(); }$/;"	f	class:Blob	access:public	signature:() const
+size	queue.cpp	/^	const size_t size;$/;"	m	class:Que	file:	access:private
+size_type	Blob.h	/^	typedef typename std::vector<T>::size_type size_type;$/;"	t	class:Blob	access:private
+size_type	Blobit.h	/^	typedef typename std::vector<T>::size_type size_type;$/;"	t	class:BlobIt	access:private
+size_type	blobit.h	/^	typedef typename std::vector<T>::size_type size_type;$/;"	t	class:BlobIt	access:private
+top	stack.cpp	/^	sNode<T> top;$/;"	m	class:Stack	file:	access:private
+wptr	Blobit.h	/^	std::weak_ptr<T> wptr;$/;"	m	class:BlobIt	access:private
+wptr	blobit.h	/^	std::weak_ptr<T> wptr;$/;"	m	class:BlobIt	access:private
+~LinkedList	linkedlist.cpp	/^		virtual ~LinkedList() {$/;"	f	class:LinkedList	access:public	signature:()
+~Node	node.cpp	/^	virtual ~Node() {$/;"	f	class:Node	access:public	signature:()
+~Que	queue.cpp	/^	virtual ~Que() {$/;"	f	class:Que	access:public	signature:()

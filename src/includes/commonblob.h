@@ -3,4 +3,5 @@
 #include <memory>
 #include <vector>
 #include <iostream>
+#include <stdexcept>
 #endif /* COMMONBLOB_H */
