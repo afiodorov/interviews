@@ -1,5 +1,6 @@
 #include <iostream>
 #include <memory>
+#include <exception>
 
 template<typename T>
 class Node {
@@ -40,12 +41,3 @@ class Stack {
 	private:
 	std::shared_ptr<Node<T>> top;
 };
-
-int main(int argc, char** argv) {
-	Stack<int> s;
-	for(int i=0; i<10; i++) {
-		s.push(std::unique_ptr<int>(new int(i)));
-	}
-	std::cout << s.pop() << " ";
-	return 0;
-}
