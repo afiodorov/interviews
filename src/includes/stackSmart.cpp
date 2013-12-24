@@ -19,7 +19,7 @@ template<typename T>
 class Stack {
 	public:
 	Stack() : top(nullptr) {};
-	T pop() {
+	virtual T pop() {
 		if(!top) throw std::exception();
 
 		std::shared_ptr<Node<T>> node = top;
@@ -27,17 +27,35 @@ class Stack {
 		return *node;
 	};
 
-	void push(std::unique_ptr<T> data) {
+	virtual void push(std::unique_ptr<T> data) {
 		auto node = std::shared_ptr<Node<T>>(new Node<T>(std::move(data)));
 		node->previous = top;
 		top = node;
 	}
 
-	T peek() const {
+	virtual T peek() const {
 		if(!top) throw std::exception();
 		return *top;
 	}
+	
+	virtual bool isEmpty() const {
+		return top == nullptr;	
+	}
 
-	private:
+	std::ostream& show(std::ostream& out) const {
+		auto node = top;
+		while(node != nullptr) {
+			out << *node << " ";
+			node = node->previous;
+		}
+		return out;
+	}
+
+	protected:
 	std::shared_ptr<Node<T>> top;
 };
+
+template<typename T>
+std::ostream& operator << (std::ostream& out, const Stack<T>& s) {
+	return s.show(out);
+}

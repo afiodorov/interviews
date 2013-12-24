@@ -9,7 +9,7 @@ template<class T>
 class Stack{
 	public:
 	Stack() : top(0) {};
-	void push(sNode<T> node) {
+	virtual void push(sNode<T> node) {
 		if(top != 0) {
 			sNode<T> old = top->getNext();
 			top = node;
@@ -20,7 +20,7 @@ class Stack{
 		}
 	}
 
-	sNode<T> pop() {
+	virtual sNode<T> pop() {
 		if(top == 0) return 0;
 		sNode<T> oldNode = top;
 		top = oldNode->getNext();
