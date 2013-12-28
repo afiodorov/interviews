@@ -16,5 +16,11 @@ out/stacktest : src/includes/stack.cpp
 
 out/weakPtrBlob : src/includes/Blob.h src/includes/Blobit.h
 
+out/towers : src/includes/stackSmart.cpp
+
+out/testQueueFromStack : src/includes/queueFromStack.cpp
+
+out/treeShow : src/includes/smartTree.cpp
+
 clean:
 	rm out/*
