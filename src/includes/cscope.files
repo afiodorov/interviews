@@ -1,0 +1,11 @@
+./commonblob.h
+./queue.cpp
+./smartTree.cpp
+./stackSmart.cpp
+./node.cpp
+./Blob.h
+./linkedlist.cpp
+./stack.cpp
+./queueFromStack.cpp
+./Blobit.h
+./blobit.h

@@ -7,37 +7,64 @@
 BLOBIT_H	Blobit.h	2;"	d
 BLOBIT_H	blobit.h	2;"	d
 BLOB_H	Blob.h	2;"	d
-Blob	Blob.h	/^	Blob() {};$/;"	f	class:Blob	access:public	signature:()
-Blob	Blob.h	/^	Blob(std::initializer_list<T> il) {data(std::make_shared(std::vector<T>(il)));};$/;"	f	class:Blob	access:public	signature:(std::initializer_list<T> il)
+Blob	Blob.h	/^	Blob() : data(new std::vector<T>()) {};$/;"	f	class:Blob	access:public	signature:()
+Blob	Blob.h	/^	Blob(std::initializer_list<T> il) : data(new std::vector<T>(il)) {};$/;"	f	class:Blob	access:public	signature:(std::initializer_list<T> il)
 Blob	Blob.h	/^class Blob {$/;"	c
-Blob::Blob	Blob.h	/^	Blob() {};$/;"	f	class:Blob	access:public	signature:()
-Blob::Blob	Blob.h	/^	Blob(std::initializer_list<T> il) {data(std::make_shared(std::vector<T>(il)));};$/;"	f	class:Blob	access:public	signature:(std::initializer_list<T> il)
+Blob::Blob	Blob.h	/^	Blob() : data(new std::vector<T>()) {};$/;"	f	class:Blob	access:public	signature:()
+Blob::Blob	Blob.h	/^	Blob(std::initializer_list<T> il) : data(new std::vector<T>(il)) {};$/;"	f	class:Blob	access:public	signature:(std::initializer_list<T> il)
 Blob::back	Blob.h	/^	T& back() const {$/;"	f	class:Blob	access:public	signature:() const
+Blob::begin	Blob.h	/^	BlobIt<T> begin() { $/;"	f	class:Blob	access:public	signature:()
 Blob::check	Blob.h	/^	void check(size_type i, const std::string &msg) const {$/;"	f	class:Blob	access:private	signature:(size_type i, const std::string &msg) const
 Blob::data	Blob.h	/^	std::shared_ptr<std::vector<T>> data;$/;"	m	class:Blob	access:private
 Blob::empty	Blob.h	/^	bool empty() const { return data->empty(); }$/;"	f	class:Blob	access:public	signature:() const
+Blob::end	Blob.h	/^	BlobIt<T> end() { $/;"	f	class:Blob	access:public	signature:()
 Blob::front	Blob.h	/^	T& front() const {$/;"	f	class:Blob	access:public	signature:() const
 Blob::pop_back	Blob.h	/^	void pop_back() {$/;"	f	class:Blob	access:public	signature:()
 Blob::push_back	Blob.h	/^	void push_back(const T& t) { data->push_back(t); }$/;"	f	class:Blob	access:public	signature:(const T& t)
 Blob::size	Blob.h	/^	size_type size() const { return data->size(); }$/;"	f	class:Blob	access:public	signature:() const
 Blob::size_type	Blob.h	/^	typedef typename std::vector<T>::size_type size_type;$/;"	t	class:Blob	access:private
-BlobIt	Blobit.h	/^	BlobIt() : curr(0) {}$/;"	f	class:BlobIt	access:private	signature:()
-BlobIt	Blobit.h	/^	BlobIt(const Blob<T>& a, size_type sz=0) : wptr(a.data), curr(sz) {}$/;"	f	class:BlobIt	access:private	signature:(const Blob<T>& a, size_type sz=0)
+BlobIt	Blobit.h	/^	BlobIt() : curr(0) {}$/;"	f	class:BlobIt	access:public	signature:()
+BlobIt	Blobit.h	/^	BlobIt(const Blob<T>& a, size_type sz=0) : wptr(a.data), curr(sz) {}$/;"	f	class:BlobIt	access:public	signature:(const Blob<T>& a, size_type sz=0)
+BlobIt	Blobit.h	/^	BlobIt(const BlobIt& in) : wptr(in.wptr), curr(in.curr) {}$/;"	f	class:BlobIt	access:public	signature:(const BlobIt& in)
 BlobIt	Blobit.h	/^class BlobIt {$/;"	c
 BlobIt	blobit.h	/^	BlobIt() : curr(0) {};$/;"	f	class:BlobIt	access:private	signature:()
 BlobIt	blobit.h	/^	BlobIt(Blob<T>&a, size_type sz=0) : wptr(a.data), curr(sz) {};$/;"	f	class:BlobIt	access:private	signature:(Blob<T>&a, size_type sz=0)
 BlobIt	blobit.h	/^class BlobIt {$/;"	c
-BlobIt::BlobIt	Blobit.h	/^	BlobIt() : curr(0) {}$/;"	f	class:BlobIt	access:private	signature:()
-BlobIt::BlobIt	Blobit.h	/^	BlobIt(const Blob<T>& a, size_type sz=0) : wptr(a.data), curr(sz) {}$/;"	f	class:BlobIt	access:private	signature:(const Blob<T>& a, size_type sz=0)
+BlobIt::BlobIt	Blobit.h	/^	BlobIt() : curr(0) {}$/;"	f	class:BlobIt	access:public	signature:()
+BlobIt::BlobIt	Blobit.h	/^	BlobIt(const Blob<T>& a, size_type sz=0) : wptr(a.data), curr(sz) {}$/;"	f	class:BlobIt	access:public	signature:(const Blob<T>& a, size_type sz=0)
+BlobIt::BlobIt	Blobit.h	/^	BlobIt(const BlobIt& in) : wptr(in.wptr), curr(in.curr) {}$/;"	f	class:BlobIt	access:public	signature:(const BlobIt& in)
 BlobIt::BlobIt	blobit.h	/^	BlobIt() : curr(0) {};$/;"	f	class:BlobIt	access:private	signature:()
 BlobIt::BlobIt	blobit.h	/^	BlobIt(Blob<T>&a, size_type sz=0) : wptr(a.data), curr(sz) {};$/;"	f	class:BlobIt	access:private	signature:(Blob<T>&a, size_type sz=0)
+BlobIt::check	Blobit.h	/^	std::shared_ptr<std::vector<T>> check(size_type i, const std::string &msg) const {$/;"	f	class:BlobIt	access:private	signature:(size_type i, const std::string &msg) const
 BlobIt::curr	Blobit.h	/^	size_type curr;$/;"	m	class:BlobIt	access:private
 BlobIt::curr	blobit.h	/^	size_type curr;$/;"	m	class:BlobIt	access:private
+BlobIt::operator !=	Blobit.h	/^	bool operator!=(const BlobIt& rhs) const {$/;"	f	class:BlobIt	access:public	signature:(const BlobIt& rhs) const
+BlobIt::operator *	Blobit.h	/^	const T& operator*() const {$/;"	f	class:BlobIt	access:public	signature:() const
+BlobIt::operator ++	Blobit.h	/^	BlobIt operator++(int) {$/;"	f	class:BlobIt	access:public	signature:(int)
+BlobIt::operator ++	Blobit.h	/^	BlobIt& operator++() {$/;"	f	class:BlobIt	access:public	signature:()
+BlobIt::operator --	Blobit.h	/^	BlobIt operator--(int) { $/;"	f	class:BlobIt	access:public	signature:(int)
+BlobIt::operator --	Blobit.h	/^	BlobIt& operator--() { $/;"	f	class:BlobIt	access:public	signature:()
+BlobIt::operator ==	Blobit.h	/^	bool operator==(const BlobIt& rhs) const {$/;"	f	class:BlobIt	access:public	signature:(const BlobIt& rhs) const
 BlobIt::size_type	Blobit.h	/^	typedef typename std::vector<T>::size_type size_type;$/;"	t	class:BlobIt	access:private
 BlobIt::size_type	blobit.h	/^	typedef typename std::vector<T>::size_type size_type;$/;"	t	class:BlobIt	access:private
-BlobIt::wptr	Blobit.h	/^	std::weak_ptr<T> wptr;$/;"	m	class:BlobIt	access:private
+BlobIt::wptr	Blobit.h	/^	std::weak_ptr<std::vector<T>> wptr;$/;"	m	class:BlobIt	access:private
 BlobIt::wptr	blobit.h	/^	std::weak_ptr<T> wptr;$/;"	m	class:BlobIt	access:private
 COMMONBLOB_H	commonblob.h	2;"	d
+ConvertToString	stackSmart.cpp	/^    enum ConvertToString $/;"	g	class:Formatter	file:	access:public
+Formatter	stackSmart.cpp	/^    Formatter() {}$/;"	f	class:Formatter	access:public	signature:()
+Formatter	stackSmart.cpp	/^    Formatter(const Formatter &);$/;"	p	class:Formatter	file:	access:private	signature:(const Formatter &)
+Formatter	stackSmart.cpp	/^class Formatter$/;"	c	file:
+Formatter::ConvertToString	stackSmart.cpp	/^    enum ConvertToString $/;"	g	class:Formatter	file:	access:public
+Formatter::Formatter	stackSmart.cpp	/^    Formatter() {}$/;"	f	class:Formatter	access:public	signature:()
+Formatter::Formatter	stackSmart.cpp	/^    Formatter(const Formatter &);$/;"	p	class:Formatter	file:	access:private	signature:(const Formatter &)
+Formatter::operator <<	stackSmart.cpp	/^    Formatter & operator << (const Type & value)$/;"	f	class:Formatter	access:public	signature:(const Type & value)
+Formatter::operator =	stackSmart.cpp	/^    Formatter & operator = (Formatter &);$/;"	p	class:Formatter	file:	access:private	signature:(Formatter &)
+Formatter::operator >>	stackSmart.cpp	/^    std::string operator >> (ConvertToString) { return stream_.str(); }$/;"	f	class:Formatter	access:public	signature:(ConvertToString)
+Formatter::operator std::string	stackSmart.cpp	/^    operator std::string () const   { return stream_.str(); }$/;"	f	class:Formatter	access:public	signature:() const
+Formatter::str	stackSmart.cpp	/^    std::string str() const         { return stream_.str(); }$/;"	f	class:Formatter	access:public	signature:() const
+Formatter::stream_	stackSmart.cpp	/^    std::stringstream stream_;$/;"	m	class:Formatter	file:	access:private
+Formatter::to_str	stackSmart.cpp	/^        to_str$/;"	e	enum:Formatter::ConvertToString	file:
+Formatter::~Formatter	stackSmart.cpp	/^    ~Formatter() {}$/;"	f	class:Formatter	access:public	signature:()
 LinkedList	linkedlist.cpp	/^		LinkedList() : head(0) {$/;"	f	class:LinkedList	access:public	signature:()
 LinkedList	linkedlist.cpp	/^		LinkedList(Node<T>* node) {$/;"	f	class:LinkedList	access:public	signature:(Node<T>* node)
 LinkedList	linkedlist.cpp	/^class LinkedList{$/;"	c	file:
@@ -55,15 +82,41 @@ LinkedList::~LinkedList	linkedlist.cpp	/^		virtual ~LinkedList() {$/;"	f	class:L
 Node	node.cpp	/^	Node() : next(0) {$/;"	f	class:Node	access:public	signature:()
 Node	node.cpp	/^	Node(const T& node) : next(0) {$/;"	f	class:Node	access:public	signature:(const T& node)
 Node	node.cpp	/^class Node {$/;"	c	file:
+Node	smartTree.cpp	/^	Node(Node<T> const* const &parent_) :$/;"	f	class:Node	access:public	signature:(Node<T> const* const &parent_)
+Node	smartTree.cpp	/^	Node(Node<T> const* const &parent_, std::unique_ptr<T> data_) :$/;"	f	class:Node	access:public	signature:(Node<T> const* const &parent_, std::unique_ptr<T> data_)
+Node	smartTree.cpp	/^	Node(const Node&) {}$/;"	f	class:Node	file:	access:private	signature:(const Node&)
+Node	smartTree.cpp	/^class Node {$/;"	c	file:
+Node	stackSmart.cpp	/^	Node(const Node&);$/;"	p	class:Node	file:	access:private	signature:(const Node&)
+Node	stackSmart.cpp	/^	explicit Node(std::unique_ptr<T>&& data_) : previous(nullptr), data(std::move(data_)) {};$/;"	f	class:Node	access:public	signature:(std::unique_ptr<T>&& data_)
+Node	stackSmart.cpp	/^class Node {$/;"	c	file:
 Node::Node	node.cpp	/^	Node() : next(0) {$/;"	f	class:Node	access:public	signature:()
 Node::Node	node.cpp	/^	Node(const T& node) : next(0) {$/;"	f	class:Node	access:public	signature:(const T& node)
+Node::Node	smartTree.cpp	/^	Node(Node<T> const* const &parent_) :$/;"	f	class:Node	access:public	signature:(Node<T> const* const &parent_)
+Node::Node	smartTree.cpp	/^	Node(Node<T> const* const &parent_, std::unique_ptr<T> data_) :$/;"	f	class:Node	access:public	signature:(Node<T> const* const &parent_, std::unique_ptr<T> data_)
+Node::Node	smartTree.cpp	/^	Node(const Node&) {}$/;"	f	class:Node	file:	access:private	signature:(const Node&)
+Node::Node	stackSmart.cpp	/^	Node(const Node&);$/;"	p	class:Node	file:	access:private	signature:(const Node&)
+Node::Node	stackSmart.cpp	/^	explicit Node(std::unique_ptr<T>&& data_) : previous(nullptr), data(std::move(data_)) {};$/;"	f	class:Node	access:public	signature:(std::unique_ptr<T>&& data_)
 Node::data	node.cpp	/^	T* data;$/;"	m	class:Node	file:	access:private
+Node::data	smartTree.cpp	/^	std::unique_ptr<T> data;$/;"	m	class:Node	file:	access:private
+Node::data	stackSmart.cpp	/^	std::unique_ptr<T> data;$/;"	m	class:Node	file:	access:private
 Node::getData	node.cpp	/^	const T& getData() const {$/;"	f	class:Node	access:public	signature:() const
+Node::getData	smartTree.cpp	/^	T getData() {$/;"	f	class:Node	access:public	signature:()
+Node::getData	stackSmart.cpp	/^	T getData() const {$/;"	f	class:Node	access:public	signature:() const
 Node::getNext	node.cpp	/^	Node* getNext() const {$/;"	f	class:Node	access:public	signature:() const
+Node::left	smartTree.cpp	/^	std::unique_ptr<Node<T>> left;$/;"	m	class:Node	file:	access:private
+Node::movePtr	stackSmart.cpp	/^	std::unique_ptr<T> movePtr() {$/;"	f	class:Node	access:public	signature:()
 Node::next	node.cpp	/^	Node* next;$/;"	m	class:Node	file:	access:private
 Node::operator =	node.cpp	/^	Node& operator= (const Node& rhs) {$/;"	f	class:Node	access:public	signature:(const Node& rhs)
+Node::operator =	smartTree.cpp	/^	void operator=(const Node&) {}$/;"	f	class:Node	file:	access:private	signature:(const Node&)
+Node::operator =	stackSmart.cpp	/^	Node& operator=(const Node&);$/;"	p	class:Node	file:	access:private	signature:(const Node&)
 Node::operator ==	node.cpp	/^	bool operator== (const Node& rhs) const {$/;"	f	class:Node	access:public	signature:(const Node& rhs) const
+Node::parent	smartTree.cpp	/^	Node<T> const* parent;$/;"	m	class:Node	file:	access:private
+Node::previous	stackSmart.cpp	/^	std::shared_ptr<Node> previous;$/;"	m	class:Node	file:	access:public
+Node::right	smartTree.cpp	/^	std::unique_ptr<Node<T>> right;$/;"	m	class:Node	file:	access:private
+Node::setData	smartTree.cpp	/^	void setData(std::unique_ptr<T> data) {$/;"	f	class:Node	access:public	signature:(std::unique_ptr<T> data)
+Node::setLeft	smartTree.cpp	/^	void setLeft(std::unique_ptr<Node<T>> left) {$/;"	f	class:Node	access:public	signature:(std::unique_ptr<Node<T>> left)
 Node::setNext	node.cpp	/^	void setNext(Node* in) {$/;"	f	class:Node	access:public	signature:(Node* in)
+Node::setRight	smartTree.cpp	/^	void setRight(std::unique_ptr<Node<T>> right) {$/;"	f	class:Node	access:public	signature:(std::unique_ptr<Node<T>> right)
 Node::show	node.cpp	/^	std::ostream& show(std::ostream& out) const {$/;"	f	class:Node	access:public	signature:(std::ostream& out) const
 Node::~Node	node.cpp	/^	virtual ~Node() {$/;"	f	class:Node	access:public	signature:()
 Que	queue.cpp	/^	Que(const size_t& size) : size(size) {$/;"	f	class:Que	access:public	signature:(const size_t& size)
@@ -78,60 +131,137 @@ Que::push	queue.cpp	/^	void push(const T element) {$/;"	f	class:Que	access:publi
 Que::show	queue.cpp	/^	std::ostream& show(std::ostream & out) const {$/;"	f	class:Que	access:public	signature:(std::ostream & out) const
 Que::size	queue.cpp	/^	const size_t size;$/;"	m	class:Que	file:	access:private
 Que::~Que	queue.cpp	/^	virtual ~Que() {$/;"	f	class:Que	access:public	signature:()
+Queue	queueFromStack.cpp	/^	Queue() : current(new Stack<T>()), buffer(new Stack<T>) {};$/;"	f	class:Queue	access:public	signature:()
+Queue	queueFromStack.cpp	/^class Queue {$/;"	c	file:
+Queue::Queue	queueFromStack.cpp	/^	Queue() : current(new Stack<T>()), buffer(new Stack<T>) {};$/;"	f	class:Queue	access:public	signature:()
+Queue::buffer	queueFromStack.cpp	/^	stackPtr current, buffer;$/;"	m	class:Queue	file:	access:private
+Queue::current	queueFromStack.cpp	/^	stackPtr current, buffer;$/;"	m	class:Queue	file:	access:private
+Queue::dequeue	queueFromStack.cpp	/^	std::unique_ptr<T> dequeue() {$/;"	f	class:Queue	access:public	signature:()
+Queue::enqueue	queueFromStack.cpp	/^	void enqueue(std::unique_ptr<T> in) {$/;"	f	class:Queue	access:public	signature:(std::unique_ptr<T> in)
+Queue::stackPtr	queueFromStack.cpp	/^	typedef std::unique_ptr<Stack<T>> stackPtr;$/;"	t	class:Queue	file:	access:private
 Stack	stack.cpp	/^	Stack() : top(0) {};$/;"	f	class:Stack	access:public	signature:()
 Stack	stack.cpp	/^class Stack{$/;"	c	file:
+Stack	stackSmart.cpp	/^	Stack() : top(nullptr) {};$/;"	f	class:Stack	access:public	signature:()
+Stack	stackSmart.cpp	/^class Stack {$/;"	c	file:
 Stack::Stack	stack.cpp	/^	Stack() : top(0) {};$/;"	f	class:Stack	access:public	signature:()
-Stack::pop	stack.cpp	/^	sNode<T> pop() {$/;"	f	class:Stack	access:public	signature:()
-Stack::push	stack.cpp	/^	void push(sNode<T> node) {$/;"	f	class:Stack	access:public	signature:(sNode<T> node)
+Stack::Stack	stackSmart.cpp	/^	Stack() : top(nullptr) {};$/;"	f	class:Stack	access:public	signature:()
+Stack::isEmpty	stackSmart.cpp	/^	virtual bool isEmpty() const {$/;"	f	class:Stack	access:public	signature:() const
+Stack::peek	stackSmart.cpp	/^	virtual T peek() const {$/;"	f	class:Stack	access:public	signature:() const
+Stack::pop	stack.cpp	/^	virtual sNode<T> pop() {$/;"	f	class:Stack	access:public	signature:()
+Stack::pop	stackSmart.cpp	/^	virtual T pop() {$/;"	f	class:Stack	access:public	signature:()
+Stack::popPtr	stackSmart.cpp	/^	virtual std::unique_ptr<T> popPtr() {$/;"	f	class:Stack	access:public	signature:()
+Stack::push	stack.cpp	/^	virtual void push(sNode<T> node) {$/;"	f	class:Stack	access:public	signature:(sNode<T> node)
+Stack::push	stackSmart.cpp	/^	virtual void push(std::unique_ptr<T>&& data) {$/;"	f	class:Stack	access:public	signature:(std::unique_ptr<T>&& data)
 Stack::show	stack.cpp	/^	std::ostream& show(std::ostream& out) const {$/;"	f	class:Stack	access:public	signature:(std::ostream& out) const
+Stack::show	stackSmart.cpp	/^	std::ostream& show(std::ostream& out) const {$/;"	f	class:Stack	access:public	signature:(std::ostream& out) const
 Stack::top	stack.cpp	/^	sNode<T> top;$/;"	m	class:Stack	file:	access:private
+Stack::top	stackSmart.cpp	/^	std::shared_ptr<Node<T>> top;$/;"	m	class:Stack	file:	access:protected
+Tree	smartTree.cpp	/^	Tree() : root(std::unique_ptr<Node<T>>(new Node<T>(nullptr))) {}$/;"	f	class:Tree	access:public	signature:()
+Tree	smartTree.cpp	/^	Tree(const std::vector<T>& vector) :$/;"	f	class:Tree	access:public	signature:(const std::vector<T>& vector)
+Tree	smartTree.cpp	/^class Tree {$/;"	c	file:
+Tree::Tree	smartTree.cpp	/^	Tree() : root(std::unique_ptr<Node<T>>(new Node<T>(nullptr))) {}$/;"	f	class:Tree	access:public	signature:()
+Tree::Tree	smartTree.cpp	/^	Tree(const std::vector<T>& vector) :$/;"	f	class:Tree	access:public	signature:(const std::vector<T>& vector)
+Tree::addChildren	smartTree.cpp	/^	void addChildren(std::unique_ptr<Node<T>> const &parent,$/;"	f	class:Tree	file:	access:private	signature:(std::unique_ptr<Node<T>> const &parent, const std::vector<T>& vector, typename std::vector<T>::size_type index)
+Tree::root	smartTree.cpp	/^	std::unique_ptr<Node<T>> root;$/;"	m	class:Tree	file:	access:private
+Tree::show	smartTree.cpp	/^	std::ostream& show(std::ostream& out) const {$/;"	f	class:Tree	access:public	signature:(std::ostream& out) const
+Tree::showNode	smartTree.cpp	/^	void showNode(std::ostream& out, std::unique_ptr<Node<T>> const &node) const {$/;"	f	class:Tree	file:	access:private	signature:(std::ostream& out, std::unique_ptr<Node<T>> const &node) const
+addChildren	smartTree.cpp	/^	void addChildren(std::unique_ptr<Node<T>> const &parent,$/;"	f	class:Tree	file:	access:private	signature:(std::unique_ptr<Node<T>> const &parent, const std::vector<T>& vector, typename std::vector<T>::size_type index)
 addNode	linkedlist.cpp	/^		void addNode(Node<T>* node) {$/;"	f	class:LinkedList	access:public	signature:(Node<T>* node)
 arr	queue.cpp	/^	T* arr;$/;"	m	class:Que	file:	access:private
 back	Blob.h	/^	T& back() const {$/;"	f	class:Blob	access:public	signature:() const
+begin	Blob.h	/^	BlobIt<T> begin() { $/;"	f	class:Blob	access:public	signature:()
 begin	queue.cpp	/^	size_t begin, end;$/;"	m	class:Que	file:	access:private
+buffer	queueFromStack.cpp	/^	stackPtr current, buffer;$/;"	m	class:Queue	file:	access:private
 check	Blob.h	/^	void check(size_type i, const std::string &msg) const {$/;"	f	class:Blob	access:private	signature:(size_type i, const std::string &msg) const
+check	Blobit.h	/^	std::shared_ptr<std::vector<T>> check(size_type i, const std::string &msg) const {$/;"	f	class:BlobIt	access:private	signature:(size_type i, const std::string &msg) const
 curr	Blobit.h	/^	size_type curr;$/;"	m	class:BlobIt	access:private
 curr	blobit.h	/^	size_type curr;$/;"	m	class:BlobIt	access:private
+current	queueFromStack.cpp	/^	stackPtr current, buffer;$/;"	m	class:Queue	file:	access:private
 data	Blob.h	/^	std::shared_ptr<std::vector<T>> data;$/;"	m	class:Blob	access:private
 data	node.cpp	/^	T* data;$/;"	m	class:Node	file:	access:private
+data	smartTree.cpp	/^	std::unique_ptr<T> data;$/;"	m	class:Node	file:	access:private
+data	stackSmart.cpp	/^	std::unique_ptr<T> data;$/;"	m	class:Node	file:	access:private
+dequeue	queueFromStack.cpp	/^	std::unique_ptr<T> dequeue() {$/;"	f	class:Queue	access:public	signature:()
 empty	Blob.h	/^	bool empty() const { return data->empty(); }$/;"	f	class:Blob	access:public	signature:() const
+end	Blob.h	/^	BlobIt<T> end() { $/;"	f	class:Blob	access:public	signature:()
 end	queue.cpp	/^	size_t begin, end;$/;"	m	class:Que	file:	access:private
+enqueue	queueFromStack.cpp	/^	void enqueue(std::unique_ptr<T> in) {$/;"	f	class:Queue	access:public	signature:(std::unique_ptr<T> in)
 front	Blob.h	/^	T& front() const {$/;"	f	class:Blob	access:public	signature:() const
 front	queue.cpp	/^	T front() const {$/;"	f	class:Que	access:public	signature:() const
 getData	node.cpp	/^	const T& getData() const {$/;"	f	class:Node	access:public	signature:() const
+getData	smartTree.cpp	/^	T getData() {$/;"	f	class:Node	access:public	signature:()
+getData	stackSmart.cpp	/^	T getData() const {$/;"	f	class:Node	access:public	signature:() const
 getHead	linkedlist.cpp	/^		Node<T>* getHead() const {$/;"	f	class:LinkedList	access:public	signature:() const
 getHead	linkedlist.cpp	/^		Node<T>* getHead() {$/;"	f	class:LinkedList	access:public	signature:()
 getNext	node.cpp	/^	Node* getNext() const {$/;"	f	class:Node	access:public	signature:() const
 head	linkedlist.cpp	/^		Node<T>* head;$/;"	m	class:LinkedList	file:	access:private
+isEmpty	stackSmart.cpp	/^	virtual bool isEmpty() const {$/;"	f	class:Stack	access:public	signature:() const
+left	smartTree.cpp	/^	std::unique_ptr<Node<T>> left;$/;"	m	class:Node	file:	access:private
+movePtr	stackSmart.cpp	/^	std::unique_ptr<T> movePtr() {$/;"	f	class:Node	access:public	signature:()
 next	node.cpp	/^	Node* next;$/;"	m	class:Node	file:	access:private
+operator !=	Blobit.h	/^	bool operator!=(const BlobIt& rhs) const {$/;"	f	class:BlobIt	access:public	signature:(const BlobIt& rhs) const
+operator *	Blobit.h	/^	const T& operator*() const {$/;"	f	class:BlobIt	access:public	signature:() const
+operator ++	Blobit.h	/^	BlobIt operator++(int) {$/;"	f	class:BlobIt	access:public	signature:(int)
+operator ++	Blobit.h	/^	BlobIt& operator++() {$/;"	f	class:BlobIt	access:public	signature:()
+operator --	Blobit.h	/^	BlobIt operator--(int) { $/;"	f	class:BlobIt	access:public	signature:(int)
+operator --	Blobit.h	/^	BlobIt& operator--() { $/;"	f	class:BlobIt	access:public	signature:()
 operator <<	linkedlist.cpp	/^std::ostream& operator <<(std::ostream& osObject, const LinkedList<T>& list)$/;"	f	signature:(std::ostream& osObject, const LinkedList<T>& list)
 operator <<	node.cpp	/^std::ostream& operator << (std::ostream& out, const Node<T>& node){$/;"	f	signature:(std::ostream& out, const Node<T>& node)
 operator <<	queue.cpp	/^std::ostream& operator <<(std::ostream& osObject, const Que<T>& queue)$/;"	f	signature:(std::ostream& osObject, const Que<T>& queue)
+operator <<	smartTree.cpp	/^std::ostream& operator<<(std::ostream& out, const Tree<T>& tree) {$/;"	f	signature:(std::ostream& out, const Tree<T>& tree)
 operator <<	stack.cpp	/^std::ostream& operator<<(std::ostream& out, const Stack<T>& stack) {$/;"	f	signature:(std::ostream& out, const Stack<T>& stack)
+operator <<	stackSmart.cpp	/^    Formatter & operator << (const Type & value)$/;"	f	class:Formatter	access:public	signature:(const Type & value)
+operator <<	stackSmart.cpp	/^std::ostream& operator << (std::ostream& out, const Stack<T>& s) {$/;"	f	signature:(std::ostream& out, const Stack<T>& s)
 operator =	node.cpp	/^	Node& operator= (const Node& rhs) {$/;"	f	class:Node	access:public	signature:(const Node& rhs)
+operator =	smartTree.cpp	/^	void operator=(const Node&) {}$/;"	f	class:Node	file:	access:private	signature:(const Node&)
+operator =	stackSmart.cpp	/^	Node& operator=(const Node&);$/;"	p	class:Node	file:	access:private	signature:(const Node&)
+operator =	stackSmart.cpp	/^    Formatter & operator = (Formatter &);$/;"	p	class:Formatter	file:	access:private	signature:(Formatter &)
+operator ==	Blobit.h	/^	bool operator==(const BlobIt& rhs) const {$/;"	f	class:BlobIt	access:public	signature:(const BlobIt& rhs) const
 operator ==	node.cpp	/^	bool operator== (const Node& rhs) const {$/;"	f	class:Node	access:public	signature:(const Node& rhs) const
+operator >>	stackSmart.cpp	/^    std::string operator >> (ConvertToString) { return stream_.str(); }$/;"	f	class:Formatter	access:public	signature:(ConvertToString)
 operator const int	linkedlist.cpp	/^		operator const int() {$/;"	f	class:LinkedList	access:public	signature:()
 operator const int	linkedlist.cpp	/^LinkedList<int>::operator const int() { $/;"	f	class:LinkedList	signature:()
+operator std::string	stackSmart.cpp	/^    operator std::string () const   { return stream_.str(); }$/;"	f	class:Formatter	access:public	signature:() const
+parent	smartTree.cpp	/^	Node<T> const* parent;$/;"	m	class:Node	file:	access:private
+peek	stackSmart.cpp	/^	virtual T peek() const {$/;"	f	class:Stack	access:public	signature:() const
 pop	queue.cpp	/^	T pop() {$/;"	f	class:Que	access:public	signature:()
-pop	stack.cpp	/^	sNode<T> pop() {$/;"	f	class:Stack	access:public	signature:()
+pop	stack.cpp	/^	virtual sNode<T> pop() {$/;"	f	class:Stack	access:public	signature:()
+pop	stackSmart.cpp	/^	virtual T pop() {$/;"	f	class:Stack	access:public	signature:()
+popPtr	stackSmart.cpp	/^	virtual std::unique_ptr<T> popPtr() {$/;"	f	class:Stack	access:public	signature:()
 pop_back	Blob.h	/^	void pop_back() {$/;"	f	class:Blob	access:public	signature:()
+previous	stackSmart.cpp	/^	std::shared_ptr<Node> previous;$/;"	m	class:Node	file:	access:public
 push	queue.cpp	/^	void push(const T element) {$/;"	f	class:Que	access:public	signature:(const T element)
-push	stack.cpp	/^	void push(sNode<T> node) {$/;"	f	class:Stack	access:public	signature:(sNode<T> node)
+push	stack.cpp	/^	virtual void push(sNode<T> node) {$/;"	f	class:Stack	access:public	signature:(sNode<T> node)
+push	stackSmart.cpp	/^	virtual void push(std::unique_ptr<T>&& data) {$/;"	f	class:Stack	access:public	signature:(std::unique_ptr<T>&& data)
 push_back	Blob.h	/^	void push_back(const T& t) { data->push_back(t); }$/;"	f	class:Blob	access:public	signature:(const T& t)
 removeNode	linkedlist.cpp	/^		void removeNode() {$/;"	f	class:LinkedList	access:public	signature:()
+right	smartTree.cpp	/^	std::unique_ptr<Node<T>> right;$/;"	m	class:Node	file:	access:private
+root	smartTree.cpp	/^	std::unique_ptr<Node<T>> root;$/;"	m	class:Tree	file:	access:private
+setData	smartTree.cpp	/^	void setData(std::unique_ptr<T> data) {$/;"	f	class:Node	access:public	signature:(std::unique_ptr<T> data)
+setLeft	smartTree.cpp	/^	void setLeft(std::unique_ptr<Node<T>> left) {$/;"	f	class:Node	access:public	signature:(std::unique_ptr<Node<T>> left)
 setNext	node.cpp	/^	void setNext(Node* in) {$/;"	f	class:Node	access:public	signature:(Node* in)
+setRight	smartTree.cpp	/^	void setRight(std::unique_ptr<Node<T>> right) {$/;"	f	class:Node	access:public	signature:(std::unique_ptr<Node<T>> right)
 show	linkedlist.cpp	/^		std::ostream& show(std::ostream & out) const {$/;"	f	class:LinkedList	access:public	signature:(std::ostream & out) const
 show	node.cpp	/^	std::ostream& show(std::ostream& out) const {$/;"	f	class:Node	access:public	signature:(std::ostream& out) const
 show	queue.cpp	/^	std::ostream& show(std::ostream & out) const {$/;"	f	class:Que	access:public	signature:(std::ostream & out) const
+show	smartTree.cpp	/^	std::ostream& show(std::ostream& out) const {$/;"	f	class:Tree	access:public	signature:(std::ostream& out) const
 show	stack.cpp	/^	std::ostream& show(std::ostream& out) const {$/;"	f	class:Stack	access:public	signature:(std::ostream& out) const
+show	stackSmart.cpp	/^	std::ostream& show(std::ostream& out) const {$/;"	f	class:Stack	access:public	signature:(std::ostream& out) const
+showNode	smartTree.cpp	/^	void showNode(std::ostream& out, std::unique_ptr<Node<T>> const &node) const {$/;"	f	class:Tree	file:	access:private	signature:(std::ostream& out, std::unique_ptr<Node<T>> const &node) const
 size	Blob.h	/^	size_type size() const { return data->size(); }$/;"	f	class:Blob	access:public	signature:() const
 size	queue.cpp	/^	const size_t size;$/;"	m	class:Que	file:	access:private
 size_type	Blob.h	/^	typedef typename std::vector<T>::size_type size_type;$/;"	t	class:Blob	access:private
 size_type	Blobit.h	/^	typedef typename std::vector<T>::size_type size_type;$/;"	t	class:BlobIt	access:private
 size_type	blobit.h	/^	typedef typename std::vector<T>::size_type size_type;$/;"	t	class:BlobIt	access:private
+stackPtr	queueFromStack.cpp	/^	typedef std::unique_ptr<Stack<T>> stackPtr;$/;"	t	class:Queue	file:	access:private
+str	stackSmart.cpp	/^    std::string str() const         { return stream_.str(); }$/;"	f	class:Formatter	access:public	signature:() const
+stream_	stackSmart.cpp	/^    std::stringstream stream_;$/;"	m	class:Formatter	file:	access:private
+to_str	stackSmart.cpp	/^        to_str$/;"	e	enum:Formatter::ConvertToString	file:
 top	stack.cpp	/^	sNode<T> top;$/;"	m	class:Stack	file:	access:private
-wptr	Blobit.h	/^	std::weak_ptr<T> wptr;$/;"	m	class:BlobIt	access:private
+top	stackSmart.cpp	/^	std::shared_ptr<Node<T>> top;$/;"	m	class:Stack	file:	access:protected
+wptr	Blobit.h	/^	std::weak_ptr<std::vector<T>> wptr;$/;"	m	class:BlobIt	access:private
 wptr	blobit.h	/^	std::weak_ptr<T> wptr;$/;"	m	class:BlobIt	access:private
+~Formatter	stackSmart.cpp	/^    ~Formatter() {}$/;"	f	class:Formatter	access:public	signature:()
 ~LinkedList	linkedlist.cpp	/^		virtual ~LinkedList() {$/;"	f	class:LinkedList	access:public	signature:()
 ~Node	node.cpp	/^	virtual ~Node() {$/;"	f	class:Node	access:public	signature:()
 ~Que	queue.cpp	/^	virtual ~Que() {$/;"	f	class:Que	access:public	signature:()

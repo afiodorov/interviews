@@ -14,7 +14,8 @@ int main (int, char**) {
 		vector.push_back(a);
 	}
 
-	Tree<int> tree = Tree<int>(vector);
-	std::cout << tree;
+	Tree::Tree<int> tree = Tree::Tree<int>(vector);
+	//std::cout << tree;
+	tree.showPreOrder(std::cout);
 	return 0;
 }

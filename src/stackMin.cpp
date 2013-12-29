@@ -4,7 +4,7 @@ class StackNode {
 	public:
 		StackNode* previous;
 		int min;
-		StackNode(int a) : previous(0), min(a), data(a) {};
+		StackNode(int a) : previous(0), min(a), data(a) {}
 
 		operator int() {
 			return data;
@@ -15,7 +15,7 @@ class StackNode {
 
 class Stack {
 	public:
-		Stack() : top(nullptr) {};
+		Stack() : top(nullptr) {}
 		void push(int a) {
 			if(!top) top = new StackNode(a);
 			else {

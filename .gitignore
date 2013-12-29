@@ -23,3 +23,5 @@
 out/
 *.swp
 *.pyc
+
+tags
