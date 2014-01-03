@@ -16,6 +16,5 @@ int main (int, char**) {
 
 	Tree::Tree<int> tree = Tree::Tree<int>(vector);
 	std::cout << tree;
-	std::cout << tree.isBalanced();
 	return 0;
 }

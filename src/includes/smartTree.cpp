@@ -85,7 +85,7 @@ namespace Tree {
 		Tree() : root(std::unique_ptr<Node<T>>(new Node<T>(nullptr))) {}
 		Tree(const std::vector<T>& vector) :
 			root(std::unique_ptr<Node<T>>(new Node<T>(nullptr,
-					std::unique_ptr<T>(new T(vector[0]))))) {
+					std::unique_ptr<T>(new T( (vector.size() > 0) ?  vector.front() : T()))))) {
 			addChildren(root, vector, 0);
 		}
 
@@ -207,7 +207,7 @@ namespace Tree {
 			return root.get();
 		}
 
-		std::unique_ptr<Node<T>> getRoot() {
+		std::unique_ptr<Node<T>>& getRoot() {
 			return root;
 		}
 

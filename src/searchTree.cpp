@@ -15,7 +15,6 @@ int main(int, char**) {
 		vector.push_back(n);
 	}
 	Tree::SearchTree<int> tree(vector);
-	tree.insert(std::unique_ptr<int>(new int(5)));
 	std::cout << tree;
 
 	return 0;
