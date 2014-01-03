@@ -22,5 +22,7 @@ out/testQueueFromStack : src/includes/queueFromStack.cpp
 
 out/treeShow : src/includes/smartTree.cpp
 
+out/showTree : src/includes/smartSearchTree.cpp
+
 clean:
 	rm out/*

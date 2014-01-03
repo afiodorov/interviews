@@ -10,8 +10,10 @@ namespace Tree{
 		}
 
 	public:
-		void insert(std::unique_ptr<Node<T>> node) {
-			insertAtNode(node, this->getRoot());
+		SearchTree(const std::vector<T>& vector) : Tree<T>(vector) {};
+		void insert(std::unique_ptr<T> t) {
+			insertAtNode(std::unique_ptr<Node<T>>(new Node<T>(nullptr,
+							std::move(t))), this->getRoot());
 		}
 
 	private:
