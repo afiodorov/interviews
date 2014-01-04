@@ -16,11 +16,11 @@ namespace Tree {
 		friend class SearchTree<T>;
 
 		public:
-		Node(Node<T> const* const &parent_, std::unique_ptr<T> data_) :
+		Node(Node<T>* const &parent_, std::unique_ptr<T> data_) :
 			right(nullptr), left(nullptr), parent(parent_),
 			data(std::move(data_)) {}
 
-		Node(Node<T> const* const &parent_) :
+		Node(Node<T>* const &parent_) :
 			right(nullptr), left(nullptr), parent(parent_), 
 			data(nullptr) {}
 
@@ -40,27 +40,28 @@ namespace Tree {
 			return *data;	
 		}
 
-		bool operator<(const Node<T>& rhs) {
-			return *data < *rhs.data();
+		bool operator<(const Node<T>& rhs) const {
+			return getData() < rhs.getData();
 		}
 
-		bool operator>(const Node<T>& rhs) {
-			return *data > *rhs.data();
+		bool operator>(const Node<T>& rhs) const {
+			return getData() > rhs.getData();
 		}
 
-		bool operator>=(const Node<T>& rhs) {
+		bool operator>=(const Node<T>& rhs) const {
 			return !operator<(rhs);
 		}
 
-		bool operator<=(const Node<T>& rhs) {
+		bool operator<=(const Node<T>& rhs) const {
 			return !operator>(rhs);
 		}
 
-		bool operator==(const Node<T>& rhs) {
-			return (*data == *rhs.data());
+		bool operator==(const Node<T>& rhs) const {
+			return (getData() == rhs.getData()) &&
+				(parent == rhs.parent);
 		}
 
-		bool operator!=(const Node<T>& rhs) {
+		bool operator!=(const Node<T>& rhs) const {
 			return !operator==(rhs);
 		}
 
@@ -70,7 +71,7 @@ namespace Tree {
 
 		std::unique_ptr<Node<T>> right;
 		std::unique_ptr<Node<T>> left;
-		Node<T> const* parent;
+		Node<T>* parent;
 		std::unique_ptr<T> data;
 
 	};
@@ -78,7 +79,7 @@ namespace Tree {
 	template<typename T>
 	class Tree {
 		friend inline std::ostream& operator<<(std::ostream& out, const Tree& tree) {
-			return tree.showInOrder(out, tree.root);
+			return tree.showInOrder(out, tree.root) << std::endl;
 		}
 
 		public:
@@ -183,13 +184,21 @@ namespace Tree {
 		}
 
 		std::ostream& showInOrder(std::ostream& out, std::unique_ptr<Node<T>> const &node) const {
+			if(!node || !node->data) return out;
+
 			if(node->left) showInOrder(out, node->left);
 			out << *node << " ";
 			if(node->right) showInOrder(out, node->right);
 			return out;
 		}
 
+		std::unique_ptr<Node<T>>& successor(const Node<T>& node) {
+
+		}
+
 		std::ostream& showPreOrder(std::ostream& out, std::unique_ptr<Node<T>> const &node) const {
+			if(!node || !node->data) return out;
+
 			out << *node << " ";
 			if(node->left) showPreOrder(out, node->left);
 			if(node->right) showPreOrder(out, node->right);
@@ -197,6 +206,8 @@ namespace Tree {
 		}
 
 		std::ostream& showPostOrder(std::ostream& out, std::unique_ptr<Node<T>> const &node) const {
+			if(!node || !node->data) return out;
+
 			if(node->left) showPostOrder(out, node->left);
 			if(node->right) showPostOrder(out, node->right);
 			out << *node << " ";
@@ -209,6 +220,11 @@ namespace Tree {
 
 		std::unique_ptr<Node<T>>& getRoot() {
 			return root;
+		}
+
+		int height(Node<T> const* const node) const {
+			if(!node) return 0;
+			return std::max(height(node->right.get()), height(node->left.get())) + 1;
 		}
 
 		protected:
@@ -239,11 +255,6 @@ namespace Tree {
 			if (!node) return true;
 			return (abs(height(node->right.get()) - height(node->left.get())) <= 1) &&
 					isBalanced(node->left.get()) && isBalanced(node->right.get());
-		}
-
-		int height(Node<T> const* const node) const {
-			if(!node) return 0;
-			return std::max(height(node->right.get()), height(node->left.get())) + 1;
 		}
 	};
 }
