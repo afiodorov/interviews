@@ -11,11 +11,20 @@
 #include <signal.h>
 #include <stdlib.h>
 #include "unistd.h"
+#include <stack>
+#include <limits>
+
+// no luck with switch on strings in C++
+constexpr unsigned int str2int(const char* str, int h = 0)
+{
+    return !str[h] ? 5381 : (str2int(str, h+1)*33) ^ str[h];
+}
+
 
 struct Pentomino {
 	Pentomino(std::initializer_list<std::initializer_list<int>> lst) {
 		for(const auto& l : lst) {
-			cs.push_back(std::pair<int, int>(*l.begin(), *l.end()));
+			cs.push_back(std::pair<int, int>(*l.begin(), *(l.begin()+1)));
 		}
 	}
 
@@ -38,6 +47,39 @@ struct Pentomino {
 					list.push_back(std::pair<int, int>(pair.second, pair.first));
 				});
 
+		return Pentomino(list);
+	}
+
+	Pentomino turn90() const {
+		std::vector<std::pair<int, int>> list;
+		for_each(cs.begin(), cs.end(), [&list](const std::pair<int, int>& pair) {
+					list.push_back(std::pair<int, int>(pair.second, -pair.first));
+				});
+		return Pentomino(list);
+	}
+
+	Pentomino turn180() const {
+		std::vector<std::pair<int, int>> list;
+		for_each(cs.begin(), cs.end(), [&list](const std::pair<int, int>& pair) {
+					list.push_back(std::pair<int, int>(-pair.first, -pair.second));
+				});
+		return Pentomino(list);
+	}
+
+	Pentomino turn270() const {
+		std::vector<std::pair<int, int>> list;
+		for_each(cs.begin(), cs.end(), [&list](const std::pair<int, int>& pair) {
+					list.push_back(std::pair<int, int>(-pair.second, pair.first));
+				});
+		return Pentomino(list);
+	}
+
+	Pentomino shift(std::pair<int, int> pair) {
+		std::vector<std::pair<int, int>> list;
+		for_each(cs.begin(), cs.end(), [&pair, &list](std::pair<int, int>& in) {
+					list.push_back(std::pair<int, int>(in.first + pair.first,
+							in.second + pair.second));
+				});
 		return Pentomino(list);
 	}
 } 
@@ -102,12 +144,25 @@ class NodeBase {
 
 class NodeColumn : public NodeBase {
     public:
-        NodeColumn(std::string name_) : NodeBase(), name(name_) {};
+        NodeColumn(std::string name_) : NodeBase(), name(name_), size(0) {};
         NodeColumn(std::string name_, Left left_, Right right_)
-            : NodeBase(left_, right_), name(name_) {};
+            : NodeBase(left_, right_), name(name_), size(0) {};
 
 		std::string getName() {
 			return name;
+        }
+
+        int getSize() {
+        	return size;
+        }
+
+        void increaseSize() {
+        	size++;
+        }
+
+        void decreaseSize() {
+        	assert(size > 0);
+        	size--;
         }
 
 	protected:
@@ -155,18 +210,49 @@ class IncidenceMatrix {
 		IncidenceMatrix(std::pair<int, int> rectangle) : rectangle(rectangle) {
 			createHeader();
 			fillIn();
-		};
+		}
+
+		std::shared_ptr<NodeBase> findColumnWithLeastOnes() {
+			int min = std::numeric_limits<int>::max();
+			std::shared_ptr<NodeBase> minColumn = nullptr;
+
+			std::shared_ptr<NodeBase> column = headerRow.firstNode;
+			while(column) {
+				if(column->column.lock()->getSize() < min) minColumn = column;
+				column = column->right;
+			}
+			return minColumn;
+		}
 
 		void addRow(DoublyLinkedList row) {
 			auto node = row.firstNode;
 			while(node) {
 				assert(!node->column.expired());
 
+				node->column.lock()->increaseSize();
 				auto nodeAbove = node->column.lock()->up;
 				node->up = nodeAbove;
 				nodeAbove.lock()->down = node;
 				node->column.lock()->up = node;
 				node = node->right;
+			}
+		}
+
+		void cover(std::shared_ptr<NodeBase> column) {
+			if(column->right)
+				column->right->left = column->left;
+
+			assert(!column->left.expired());
+			column->left.lock()->right = column->right;
+			std::shared_ptr<NodeBase> row = column->down;
+			while(row) {
+				std::shared_ptr<NodeBase> runner = row;
+				while(runner) {
+					assert(!runner->up.expired());
+					runner->up.lock()->down = runner->down;
+					runner->down = runner->up.lock();
+				}
+				column->column.lock()->decreaseSize();
 			}
 		}
 
@@ -178,6 +264,7 @@ class IncidenceMatrix {
 					{"Y", Y}};
 
 			auto headNode = std::shared_ptr<NodeColumn>(new NodeColumn("head"));
+			headNode->column = headNode;
 			headNode->up = headNode;
 			headNode->setHead();
 			headerRow.addRowNode(headNode);
@@ -186,6 +273,7 @@ class IncidenceMatrix {
 			for(int i = 0; i < rectangle.first * rectangle.second; i++) {
 				std::string currentName  = std::to_string(i);
 				auto columnNode = std::shared_ptr<NodeColumn>(new NodeColumn(currentName));
+				columnNode->column = columnNode;
 				columnNode->up = columnNode;
 				headerRow.addRowNode(columnNode);
 				map[currentName] = columnNode;
@@ -193,6 +281,7 @@ class IncidenceMatrix {
 
 			for(auto shape : shapes) {
 				auto columnNode = std::shared_ptr<NodeColumn>(new NodeColumn(shape.first));
+				columnNode->column = columnNode;
 				columnNode->up = columnNode;
 				headerRow.addRowNode(columnNode);
 				map[shape.first] = columnNode;
@@ -204,23 +293,91 @@ class IncidenceMatrix {
 
 		void fillIn() {
 			for(auto shape : shapes) {
-				auto shapeSerialised = shape.second.serialise(rectangle);
-				while(shapeSerialised.back() < 60) {
-					DoublyLinkedList list;
-					for_each(shapeSerialised.begin(), shapeSerialised.end(), 
-							[&list, this](int& integer) {
-						std::string str = std::to_string(integer++);
-						auto node = std::shared_ptr<NodeBase>(new NodeBase);
-						node->column = map[str];
-						assert(!node->column.expired());
-						list.addRowNode(node);
-					});
-					auto node = std::shared_ptr<NodeBase>(new NodeBase);
-					node->column = map[shape.first];
-					assert(!node->column.expired());
-					list.addRowNode(node);
-					addRow(list);
+				std::stack<Pentomino> stack;
+				generateAllShapes(shape, stack);
+
+				while(!stack.empty()) {
+					auto pentomino = stack.top();
+					stack.pop();
+
+					int x = 0;
+					while(x < rectangle.first) {
+						int y = 0;
+						while(y < rectangle.second) {
+							Pentomino movedPentomino = pentomino.shift({x, y});
+							std::vector<int> shapeSerialised;
+							bool isFitted =
+								std::accumulate(movedPentomino.cs.begin(),
+									movedPentomino.cs.end(), true,
+										[this, &shapeSerialised](bool result, std::pair<int, int>& pair) {
+										shapeSerialised.push_back(pair.first + pair.second * rectangle.first);
+
+										return result && (pair.first > -1) && (pair.second > -1)
+											&& (pair.first < rectangle.first)
+											&& (pair.second < rectangle.second);
+									});
+					 		y++;
+							if(!isFitted) continue;
+
+							std::sort(shapeSerialised.begin(), shapeSerialised.end());
+							DoublyLinkedList list;
+							for_each(shapeSerialised.begin(), shapeSerialised.end(), 
+									[&list, this](int& integer) {
+								std::string str = std::to_string(integer);
+								auto node = std::shared_ptr<NodeBase>(new NodeBase);
+								node->column = map[str];
+								assert(!node->column.expired());
+								list.addRowNode(node);
+							});
+							auto node = std::shared_ptr<NodeBase>(new NodeBase);
+							node->column = map[shape.first];
+							assert(!node->column.expired());
+							list.addRowNode(node);
+							addRow(list);
+						}
+						x++;
+					}
 				}
+			}
+		}
+
+		void generateAllShapes(const std::pair<std::string, Pentomino>& shape, 
+			std::stack<Pentomino>& stack) {
+			switch(str2int(shape.first.c_str())) {
+				case str2int("L"):
+					;
+				case str2int("N"):
+					;
+				case str2int("P"):
+					;
+				case str2int("F"):
+					;
+				case str2int("Y"):
+					stack.push(shape.second.flip());
+					stack.push(shape.second.flip().turn90());
+					stack.push(shape.second.flip().turn180());
+					stack.push(shape.second.flip().turn270());
+				case str2int("V"):
+					;
+				case str2int("W"):
+					;
+				case str2int("T"):
+					;
+				case str2int("U"):
+					stack.push(shape.second);
+					stack.push(shape.second.turn90());
+					stack.push(shape.second.turn180());
+					stack.push(shape.second.turn270());
+				break;
+
+				case str2int("Z"):
+					stack.push(shape.second.flip());
+					stack.push(shape.second.flip().turn90());
+				case str2int("I"):
+					stack.push(shape.second.turn90());
+				case str2int("X"):
+					stack.push(shape.second);
+				break;
 			}
 		}
 };
@@ -228,6 +385,10 @@ class IncidenceMatrix {
 int solve(std::pair<int,int> rectangle, bool shouldShow = false) {
     IncidenceMatrix matrix(rectangle);
     return 1;
+}
+
+void applyKnuthAlgo(IncidenceMatrix& matrix) {
+
 }
 
 void handler(int sig) {
