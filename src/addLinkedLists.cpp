@@ -23,7 +23,7 @@ LinkedList<T> addLinkedLists(const LinkedList<T>& l1, const LinkedList<T>& l2){
 	return result;
 }
 
-int main(int argc, char** argv) {
+int main(int, char**) {
 	std::cout.setf(std::ios::boolalpha);
 	LinkedList<int> l1, l2;
 	l1.addNode(new Node<int>(9));

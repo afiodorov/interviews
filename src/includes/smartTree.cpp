@@ -24,12 +24,38 @@ namespace Tree {
 			right(nullptr), left(nullptr), parent(parent_), 
 			data(nullptr) {}
 
+		Node(std::unique_ptr<Node<T>>&& rhs) :
+			right(rhs ? std::move(rhs->right) : nullptr),
+			left(rhs ? std::move(rhs->left) : nullptr),
+			parent(rhs ? rhs->parent : nullptr),
+			data(rhs ? std::move(rhs->data) : nullptr) {}
+
+		Node(Node<T>&& rhs) :
+			right(std::move(rhs.right)), left(std::move(rhs.left)),
+			parent(rhs.parent), data(std::move(rhs.data)) {}
+
 		void setRight(std::unique_ptr<Node<T>> right) {
 			this->right = std::move(right);
 		}
 
+		std::unique_ptr<Node<T>> takeRight() {
+			return std::move(right);
+		}
+
 		void setLeft(std::unique_ptr<Node<T>> left) {
 			this->left = std::move(left);
+		}
+
+		bool isLeft() {
+			return (left != nullptr);
+		}
+
+		bool isRight() {
+			return (right != nullptr);
+		}
+
+		std::unique_ptr<Node<T>> takeLeft() {
+			return std::move(left);
 		}
 
 		void setData(std::unique_ptr<T> data) {

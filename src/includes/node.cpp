@@ -3,14 +3,17 @@
 template<class T>
 class Node {
 	public:
-	Node() : next(0) {
+	Node() : next(nullptr) {
 		data = new T();
 	}
 
-	Node(const T& node) : next(0) {
+	Node(const T& node) : next(nullptr) {
 		data = new T(node);
 	}
 
+	Node(T&& node) : next(nullptr) {
+		data = new T(std::forward<T>(node));
+	}
 
 	virtual ~Node() {
 		delete data;
@@ -35,6 +38,10 @@ class Node {
 	}
 
 	const T& getData() const {
+		return *data;
+	}
+
+	T& getData() {
 		return *data;
 	}
 

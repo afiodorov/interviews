@@ -4,7 +4,7 @@
 template<class T>
 class LinkedList{
 	public:
-		LinkedList() : head(0) {
+		LinkedList() : head(nullptr) {
 
 		}
 
@@ -12,12 +12,48 @@ class LinkedList{
 			head = node;
 		}
 
+		LinkedList(const LinkedList& rhs) : head(nullptr) {
+			Node<T>* node = rhs.getHead();
+			while(node) {
+				addNode(node);
+				node = node->getNext();
+			}
+		}
+
+		LinkedList(LinkedList&& rhs) : head(nullptr) {
+			head = rhs.getHead();
+			rhs.head = nullptr;
+		}
+
+		LinkedList& operator=(const LinkedList<T>& rhs) {
+			if(head == rhs.head) return *this;
+			clearNodes();
+			Node<T>* node = rhs.getHead();
+			while(node) {
+				addNode(node);
+				node = node->getNext();
+			}
+			return *this;
+		}
+
+		LinkedList& operator=(LinkedList<T>&& rhs) {
+			if(head == rhs.head) return *this;
+			clearNodes();
+			head = rhs.getHead();
+			rhs.head = nullptr;
+			return *this;
+		}
+
+		bool isEmpty() {
+			return(head == nullptr);
+		}
+
 		void addNode(Node<T>* node) {
-			if(head == 0) {
+			if(head == nullptr) {
 				head = node;
 			} else {
 				Node<T>* it = head;
-				while(it->getNext() != 0) it = it->getNext();
+				while(it->getNext() != nullptr) it = it->getNext();
 				it->setNext(node);
 			}
 		}
@@ -31,18 +67,18 @@ class LinkedList{
 		}
 
 		void removeNode() {
-			if(head == 0) return;
+			if(head == nullptr) return;
 			Node<T>* it = head;
-			while(it->getNext()->getNext() != 0)
+			while(it->getNext()->getNext() != nullptr)
 				it = it->getNext();
 			delete it->getNext();
-			it->setNext(0);
+			it->setNext(nullptr);
 		}
 
 		std::ostream& show(std::ostream & out) const {
-			if(head == 0) return out;
+			if(head == nullptr) return out;
 			Node<T>* it = head;
-			while(it->getNext() != 0) {
+			while(it->getNext() != nullptr) {
 				out << it->getData() << "->";
 				it=it->getNext();
 			}
@@ -51,21 +87,25 @@ class LinkedList{
 		}
 
 		virtual ~LinkedList() {
-			if(head == 0) return;
+			clearNodes();
+		}
+
+		operator const int() {
+			return 0;
+		}
+
+	private:
+		void clearNodes() {
+			if(head == nullptr) return;
 			Node<T>* it = head;
-			while(it->getNext() != 0) {
+			while(it->getNext() != nullptr) {
 				delete it;
 				it = it->getNext();
 			}
 			delete it;
 		}
 
-		operator const int() {
-			return 0;
-		}
-	private:
 		Node<T>* head;
-
 };
 
 template<class T>

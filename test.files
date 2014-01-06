@@ -56,3 +56,4 @@ src/treeShow.cpp
 src/weakPtrBlob.cpp
 src/includes/smartSearchTree.cpp
 src/searchTree.cpp
+src/pentimo.cpp
