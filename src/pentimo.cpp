@@ -18,6 +18,10 @@ struct Pentomino {
 			cs.push_back(std::pair<int, int>(*l.begin(), *l.end()));
 		}
 	}
+
+	explicit Pentomino(std::vector<std::pair<int, int>>& vector) : cs(vector) {}
+	explicit Pentomino(std::vector<std::pair<int, int>>&& vector) : cs(vector) {}
+
 	std::vector<std::pair<int, int>> cs; 
 	std::vector<int> serialise(std::pair<int, int> rectangle) {
 		std::vector<int> result;
@@ -26,6 +30,15 @@ struct Pentomino {
 		}
 		std::sort(result.begin(), result.end());
 		return result;
+	}
+
+	Pentomino flip() const {
+		std::vector<std::pair<int, int>> list;
+		for_each(cs.begin(), cs.end(), [&list](const std::pair<int, int>& pair) {
+					list.push_back(std::pair<int, int>(pair.second, pair.first));
+				});
+
+		return Pentomino(list);
 	}
 } 
 	X{{1, 0}, {0, 1}, {1, 1}, {2, 1}, {1, 2}},
