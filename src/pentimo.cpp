@@ -98,12 +98,14 @@ struct Pentomino {
 	Y{{0, 0}, {1, 0}, {2, 0}, {3, 0}, {1, 1}};
 
 
+template<typename T>
 class DoublyLinkedList;
 class IncidenceMatrix;
 class NodeColumn;
 
 class NodeBase {
-    friend DoublyLinkedList;
+    friend DoublyLinkedList<NodeBase>;
+    friend DoublyLinkedList<NodeColumn>;
     friend IncidenceMatrix;
 	friend inline std::ostream& operator<<(std::ostream& out,
 			NodeBase& node) {
@@ -112,10 +114,6 @@ class NodeBase {
 
 	public:
 		NodeBase() {}
-
-		bool isCircular() {
-			return (right == this);
-		}
 
 	virtual ~NodeBase() {};
 
@@ -135,17 +133,31 @@ class NodeBase {
 		return column;
 	}
 
+	NodeColumn*& getColumnRef() {
+		return column;
+	}
+
 	std::ostream& show(std::ostream&);
 
-	protected:
+    protected:
+		NodeBase *up, *down;
+
+	private:
 		NodeColumn* column;
-        NodeBase* left, *up;
-		NodeBase* right, *down;
+        NodeBase *left, *right;
 };
 
 class NodeColumn : public NodeBase {
+    friend DoublyLinkedList<NodeBase>;
+    friend DoublyLinkedList<NodeColumn>;
+    friend IncidenceMatrix;
     public:
         NodeColumn(std::string name_) : NodeBase(), name(name_), size(0) {};
+
+		bool isCircular() {
+			return (right == this);
+		}
+
 
 		std::string getName() {
 			return name;
@@ -164,10 +176,29 @@ class NodeColumn : public NodeBase {
         	size--;
         }
 
+		NodeColumn* getRight() {
+			return right;
+		}
+
+		NodeColumn* getLeft() {
+			return left;
+		}
+
+		NodeColumn* getColumn() {
+			return column;
+		}
+
+		NodeColumn*& getColumnRef() {
+			return column;
+		}
 
 	protected:
 		std::string name;
 		int size;
+
+	private:
+		NodeColumn* column;
+        NodeColumn* left, *right;
 };
 
 std::ostream& NodeBase::show(std::ostream& out) {
@@ -179,6 +210,7 @@ std::ostream& NodeBase::show(std::ostream& out) {
 }
 
 
+template<typename T>
 class DoublyLinkedList {
 	friend IncidenceMatrix;
 	friend inline std::ostream& operator<<(std::ostream& out, const
@@ -188,7 +220,7 @@ class DoublyLinkedList {
 	
     public:
         DoublyLinkedList() : firstNode(nullptr), lastNode(nullptr) {}
-        NodeBase* addRowNode(NodeBase* node) {
+        T* addRowNode(T* node) {
             if(lastNode) {
                 lastNode->right = node;
                 node->left = lastNode;
@@ -201,8 +233,8 @@ class DoublyLinkedList {
             return lastNode;
         }
     private:
-        NodeBase* firstNode; 
-        NodeBase* lastNode; 
+        T* firstNode; 
+        T* lastNode; 
 
 		std::ostream& show(std::ostream& out) const {
         	auto node = firstNode;
@@ -224,11 +256,11 @@ class IncidenceMatrix {
 			clearUnusedColumns();
 		}
 
-		NodeBase* findColumnWithLeastOnes() {
+		NodeColumn* findColumnWithLeastOnes() {
 			int min = std::numeric_limits<int>::max();
-			NodeBase* minColumn = nullptr;
+			NodeColumn* minColumn = nullptr;
 
-			NodeBase* column = headerRow.firstNode->right;
+			NodeColumn* column = headerRow.firstNode->right;
 			while(column != headerRow.firstNode) {
 				if(column->column->getSize() < min) minColumn = column;
 				column = column->right;
@@ -236,14 +268,15 @@ class IncidenceMatrix {
 			return minColumn;
 		}
 
-		NodeBase* getHead() {
+		NodeColumn* getHead() {
 			return headerRow.firstNode;
 		}
 
-		void addRow(DoublyLinkedList row) {
+		template<typename T>
+		void addRow(DoublyLinkedList<T> row) {
 			if(!row.firstNode) return;
 
-			auto node = row.firstNode;
+			T* node = row.firstNode;
 			while(node != row.lastNode) {
 				node->column->increaseSize();
 				auto nodeAbove = node->column->up;
@@ -261,9 +294,7 @@ class IncidenceMatrix {
 			row.lastNode->column->up = row.lastNode;
 		}
 
-		void cover(NodeBase* column) {
-			if(!column) return;
-
+		void cover(NodeColumn*& column) {
 			column->right->left = column->left;
 			column->left->right = column->right;
 			if(column == headerRow.lastNode) headerRow.lastNode = column->left;
@@ -278,7 +309,7 @@ class IncidenceMatrix {
 			}
 		}
 
-		void uncover(NodeBase* column) {
+		void uncover(NodeColumn*& column) {
 			column->right->left = column;
 			column->left->right = column;
 			if(column->left == headerRow.lastNode) headerRow.lastNode = column;
@@ -293,9 +324,11 @@ class IncidenceMatrix {
 			}
 		}
 
+
 	private:
 		std::map<std::string, Pentomino> shapes;
 		std::stack<std::unique_ptr<NodeBase>> stackOfNodes;
+		
 		void createHeader() {
 			shapes = {{"X", X}, {"Z", Z}, {"I", I}, {"T", T}, {"U", U},
 					{"V", V}, {"W", W}, {"F", F}, {"L", L}, {"P", P}, {"N", N},
@@ -337,7 +370,7 @@ class IncidenceMatrix {
 			}
 		}
 		std::map<std::string, NodeColumn*> map;
-		DoublyLinkedList headerRow;
+		DoublyLinkedList<NodeColumn> headerRow;
 		std::pair<int,int> rectangle;
 
 		void fillIn() {
@@ -369,7 +402,7 @@ class IncidenceMatrix {
 							if(!isFitted) continue;
 
 							std::sort(shapeSerialised.begin(), shapeSerialised.end());
-							DoublyLinkedList list;
+							DoublyLinkedList<NodeBase> list;
 							for_each(shapeSerialised.begin(), shapeSerialised.end(), 
 									[&list, this](int& integer) {
 								std::string str = std::to_string(integer);
@@ -396,7 +429,7 @@ class IncidenceMatrix {
 		}
 
 		void clearUnusedColumns() {
-			for(NodeBase* column = headerRow.firstNode->right; column !=
+			for(NodeColumn* column = headerRow.firstNode->right; column !=
 					headerRow.firstNode; column = column->right) {
 				if(column->down == column) cover(column);
 			}
@@ -453,28 +486,28 @@ void applyKnuthAlgo(IncidenceMatrix& matrix, std::vector<std::string>& solution,
 		return;
 	};
 
-	NodeBase* column = matrix.findColumnWithLeastOnes();
-	if(column->getColumn()->getSize() == 0) return;
+	NodeColumn* column(std::move(matrix.findColumnWithLeastOnes()));
+	if(column->getSize() == 0) return;
 	matrix.cover(column);
 
-	for(NodeBase* row = column->getDown(); row != column; row = row->getDown()) {
+	for(NodeBase* row(std::move(column->getDown())); row != column; row = std::move(row->getDown())) {
 		std::stringstream buff;
 		buff << *row;
 		solution[k] = buff.str();
 		for(NodeBase* rowTraverse = row->getRight(); rowTraverse != row; rowTraverse = rowTraverse->getRight()) {
-			matrix.cover(rowTraverse->getColumn());
+			matrix.cover(rowTraverse->getColumnRef());
 		}
 
 		applyKnuthAlgo(matrix, solution, counter, k+1);
 
-		for(NodeBase* rowTraverse = row->getLeft(); rowTraverse != row; rowTraverse = rowTraverse->getLeft()) {
-			matrix.uncover(rowTraverse->getColumn());
+		for(NodeBase* rowTraverse(std::move(row->getLeft())); rowTraverse != row; rowTraverse = std::move(rowTraverse->getLeft())) {
+			matrix.uncover(rowTraverse->getColumnRef());
 		}
 	}
 	matrix.uncover(column);
 }
 
-void solve(std::pair<int,int> rectangle, bool shouldShow = false) {
+void solve(std::pair<int,int> rectangle) {
     IncidenceMatrix matrix(rectangle);
     int counter = 0;
 	std::vector<std::string> solution = std::vector<std::string>(rectangle.first*rectangle.second/5, "");
