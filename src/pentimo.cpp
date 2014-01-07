@@ -13,6 +13,7 @@
 #include "unistd.h"
 #include <stack>
 #include <limits>
+#include <sstream>
 
 // no luck with switch on strings in C++
 constexpr unsigned int str2int(const char* str, int h = 0)
@@ -104,6 +105,11 @@ class NodeColumn;
 class NodeBase {
     friend DoublyLinkedList;
     friend IncidenceMatrix;
+	friend inline std::ostream& operator<<(std::ostream& out,
+			NodeBase& node) {
+		return node.show(out);
+	}
+
 	public:
 		NodeBase() {}
 
@@ -128,6 +134,8 @@ class NodeBase {
 	NodeColumn* getColumn() {
 		return column;
 	}
+
+	std::ostream& show(std::ostream&);
 
 	protected:
 		NodeColumn* column;
@@ -161,6 +169,15 @@ class NodeColumn : public NodeBase {
 		std::string name;
 		int size;
 };
+
+std::ostream& NodeBase::show(std::ostream& out) {
+	for(NodeBase* p = this; p != this->left; p = p->right) {
+		out << p->getColumn()->getName() << " ";
+	}
+	out << this->left->getColumn()->getName() << " ";
+	return out;
+}
+
 
 class DoublyLinkedList {
 	friend IncidenceMatrix;
@@ -204,6 +221,7 @@ class IncidenceMatrix {
 		IncidenceMatrix(std::pair<int, int> rectangle) : rectangle(rectangle) {
 			createHeader();
 			fillIn();
+			clearUnusedColumns();
 		}
 
 		NodeBase* findColumnWithLeastOnes() {
@@ -244,23 +262,27 @@ class IncidenceMatrix {
 		}
 
 		void cover(NodeBase* column) {
-			if(column->right->left == column) return;
+			if(!column) return;
 
 			column->right->left = column->left;
 			column->left->right = column->right;
+			if(column == headerRow.lastNode) headerRow.lastNode = column->left;
 
 			for(NodeBase* row = column->down; row != column; row = row->down) {
 				for(NodeBase* rowTraverse = row->right; rowTraverse != row;
 						rowTraverse = rowTraverse->right) {
 					rowTraverse->up->down = rowTraverse->down;
 					rowTraverse->down->up = rowTraverse->up;
-					if(rowTraverse->up->down != rowTraverse)
-						rowTraverse->column->decreaseSize();
+					rowTraverse->column->decreaseSize();
 				}
 			}
 		}
 
 		void uncover(NodeBase* column) {
+			column->right->left = column;
+			column->left->right = column;
+			if(column->left == headerRow.lastNode) headerRow.lastNode = column;
+
 			for(NodeBase* row = column->up; row != column; row = row->up) {
 				for(NodeBase* rowTraverse = row->left; rowTraverse != row; 
 						rowTraverse = rowTraverse->left) {
@@ -273,12 +295,16 @@ class IncidenceMatrix {
 
 	private:
 		std::map<std::string, Pentomino> shapes;
+		std::stack<std::unique_ptr<NodeBase>> stackOfNodes;
 		void createHeader() {
 			shapes = {{"X", X}, {"Z", Z}, {"I", I}, {"T", T}, {"U", U},
 					{"V", V}, {"W", W}, {"F", F}, {"L", L}, {"P", P}, {"N", N},
 					{"Y", Y}};
 
-			auto headNode = new NodeColumn("head");
+			auto uHeadNode = std::unique_ptr<NodeColumn>(new NodeColumn("head"));
+			auto headNode = uHeadNode.get();
+			stackOfNodes.push(std::move(uHeadNode));
+
 			headNode->column = headNode;
 			headNode->up = headNode;
 			headNode->down = headNode;
@@ -287,7 +313,10 @@ class IncidenceMatrix {
 
 			for(int i = 0; i < rectangle.first * rectangle.second; i++) {
 				std::string currentName  = std::to_string(i);
-				auto columnNode = new NodeColumn(currentName);
+				auto uColumnNode = std::unique_ptr<NodeColumn>(new NodeColumn(currentName));
+				auto columnNode = uColumnNode.get();
+				stackOfNodes.push(std::move(uColumnNode));
+
 				columnNode->column = columnNode;
 				columnNode->up = columnNode;
 				columnNode->down = columnNode;
@@ -296,7 +325,10 @@ class IncidenceMatrix {
 			}
 
 			for(auto shape : shapes) {
-				auto columnNode = new NodeColumn(shape.first);
+				auto uColumnNode = std::unique_ptr<NodeColumn>(new NodeColumn(shape.first));
+				auto columnNode = uColumnNode.get();
+				stackOfNodes.push(std::move(uColumnNode));
+
 				columnNode->column = columnNode;
 				columnNode->up = columnNode;
 				columnNode->down = columnNode;
@@ -341,19 +373,32 @@ class IncidenceMatrix {
 							for_each(shapeSerialised.begin(), shapeSerialised.end(), 
 									[&list, this](int& integer) {
 								std::string str = std::to_string(integer);
-								auto node = new NodeBase;
+								auto uNode = std::unique_ptr<NodeBase>(new NodeBase);
+								auto node = uNode.get();
+								stackOfNodes.push(std::move(uNode));
+
 								node->column = map[str];
 								list.addRowNode(node);
 							});
-							auto node = new NodeBase;
+
+							auto uNode = std::unique_ptr<NodeBase>(new NodeBase);
+							auto node = uNode.get();
+							stackOfNodes.push(std::move(uNode));
 							node->column = map[shape.first];
 							list.addRowNode(node);
 							addRow(list);
-							//std::cout << list;
+							// std::cout << list;
 						}
 						x++;
 					}
 				}
+			}
+		}
+
+		void clearUnusedColumns() {
+			for(NodeBase* column = headerRow.firstNode->right; column !=
+					headerRow.firstNode; column = column->right) {
+				if(column->down == column) cover(column);
 			}
 		}
 
@@ -398,37 +443,45 @@ class IncidenceMatrix {
 		}
 };
 
-void applyKnuthAlgo(IncidenceMatrix& matrix) {
-	if(matrix.getHead()->isCircular()) {std::cout << 1 << std::endl; return;};
+void applyKnuthAlgo(IncidenceMatrix& matrix, std::vector<std::string>& solution, int& counter, int k=0) {
+	if(matrix.getHead()->isCircular()) {
+		for(auto str : solution) {
+			std::cout << str << std::endl;
+		}
+		std::cout << std::endl;
+		counter++;
+		return;
+	};
 
 	NodeBase* column = matrix.findColumnWithLeastOnes();
+	if(column->getColumn()->getSize() == 0) return;
 	matrix.cover(column);
-	NodeBase* row = column->getDown();
-	std::stack<NodeBase*> stack;
-	while(row != column) {
-		NodeBase* runner = row->getRight();
-		while(runner != row) {
-			stack.push(runner->getColumn());
-			matrix.cover(runner->getColumn());
-			runner = runner->getRight();
+
+	for(NodeBase* row = column->getDown(); row != column; row = row->getDown()) {
+		std::stringstream buff;
+		buff << *row;
+		solution[k] = buff.str();
+		for(NodeBase* rowTraverse = row->getRight(); rowTraverse != row; rowTraverse = rowTraverse->getRight()) {
+			matrix.cover(rowTraverse->getColumn());
 		}
 
-		applyKnuthAlgo(matrix);
+		applyKnuthAlgo(matrix, solution, counter, k+1);
 
-		while(!stack.empty()) {
-			matrix.uncover(stack.top());
-			stack.pop();
+		for(NodeBase* rowTraverse = row->getLeft(); rowTraverse != row; rowTraverse = rowTraverse->getLeft()) {
+			matrix.uncover(rowTraverse->getColumn());
 		}
-		row = row->getDown();
 	}
 	matrix.uncover(column);
 }
 
-int solve(std::pair<int,int> rectangle, bool shouldShow = false) {
+void solve(std::pair<int,int> rectangle, bool shouldShow = false) {
     IncidenceMatrix matrix(rectangle);
-    applyKnuthAlgo(matrix);
-    return 1;
+    int counter = 0;
+	std::vector<std::string> solution = std::vector<std::string>(rectangle.first*rectangle.second/5, "");
+    applyKnuthAlgo(matrix, solution, counter);
+	std::cout << "Found " << counter << " solutions" << std::endl;
 }
+
 
 
 void handler(int sig) {
@@ -446,6 +499,6 @@ void handler(int sig) {
 
 int main(int, char**) {
 	signal(SIGSEGV, handler);
-	solve({3,5});
+	solve({6,10});
 	return 0;
 }
