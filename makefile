@@ -8,6 +8,9 @@ out/%: src/%.cpp
 
 all: $(OBJ_FILES)
 
+release: CCFLAGS = -Ofast -std=c++11
+release: out/pentimo
+
 out/addLinkedLists out/nthLinkedListElement out/removeDuplicatesLinked : src/includes/linkedlist.cpp src/includes/node.cpp
 
 out/nthLinkedListElement : src/includes/queue.cpp

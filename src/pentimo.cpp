@@ -28,7 +28,7 @@ struct Pentomino {
 		}
 	}
 
-	explicit Pentomino(std::vector<std::pair<int, int>>& vector) : cs(vector) {}
+	explicit Pentomino(const std::vector<std::pair<int, int>>& vector) : cs(vector) {}
 	explicit Pentomino(std::vector<std::pair<int, int>>&& vector) : cs(vector) {}
 
 	std::vector<std::pair<int, int>> cs; 
@@ -97,22 +97,6 @@ struct Pentomino {
 	Y{{0, 0}, {1, 0}, {2, 0}, {3, 0}, {1, 1}};
 
 
-class NodeBase;
-struct Right {
-	explicit Right(std::shared_ptr<NodeBase> ptr_)
-		: ptr(ptr_) {};
-
-	std::shared_ptr<NodeBase> ptr;
-};
-typedef Right Down;
-
-struct Left{
-    explicit Left(std::weak_ptr<NodeBase> ptr_)
-        : ptr(ptr_) {};
-    std::weak_ptr<NodeBase> ptr;
-};
-typedef Left Up;
-
 class DoublyLinkedList;
 class IncidenceMatrix;
 class NodeColumn;
@@ -121,32 +105,39 @@ class NodeBase {
     friend DoublyLinkedList;
     friend IncidenceMatrix;
 	public:
-		NodeBase() : isHead(false) {}
-		NodeBase(Left left_, Right right_) : 
-			 left(left_.ptr), right(right_.ptr) {}
+		NodeBase() {}
 
-		void setHead() {
-		    isHead = true;
-		}
-
-		bool getIsHead() {
-		    return isHead;
+		bool isCircular() {
+			return (right == this);
 		}
 
 	virtual ~NodeBase() {};
 
+	NodeBase* getDown() {
+		return down;
+	}
+
+	NodeBase* getRight() {
+		return right;
+	}
+
+	NodeBase* getLeft() {
+		return left;
+	}
+
+	NodeColumn* getColumn() {
+		return column;
+	}
+
 	protected:
-		std::weak_ptr<NodeColumn> column;
-        std::weak_ptr<NodeBase> left, up;
-		std::shared_ptr<NodeBase> right, down;
-		bool isHead;
+		NodeColumn* column;
+        NodeBase* left, *up;
+		NodeBase* right, *down;
 };
 
 class NodeColumn : public NodeBase {
     public:
         NodeColumn(std::string name_) : NodeBase(), name(name_), size(0) {};
-        NodeColumn(std::string name_, Left left_, Right right_)
-            : NodeBase(left_, right_), name(name_), size(0) {};
 
 		std::string getName() {
 			return name;
@@ -165,6 +156,7 @@ class NodeColumn : public NodeBase {
         	size--;
         }
 
+
 	protected:
 		std::string name;
 		int size;
@@ -179,7 +171,7 @@ class DoublyLinkedList {
 	
     public:
         DoublyLinkedList() : firstNode(nullptr), lastNode(nullptr) {}
-        std::shared_ptr<NodeBase> addRowNode(std::shared_ptr<NodeBase> node) {
+        NodeBase* addRowNode(NodeBase* node) {
             if(lastNode) {
                 lastNode->right = node;
                 node->left = lastNode;
@@ -188,20 +180,22 @@ class DoublyLinkedList {
                 firstNode = lastNode = node;
             }
             firstNode->left = lastNode;
+            lastNode->right = firstNode;
             return lastNode;
         }
     private:
-        std::shared_ptr<NodeBase> firstNode; 
-        std::shared_ptr<NodeBase> lastNode; 
+        NodeBase* firstNode; 
+        NodeBase* lastNode; 
 
 		std::ostream& show(std::ostream& out) const {
         	auto node = firstNode;
+        	if(!firstNode) return out;
 
-        	while(node) {
-        		out << node->column.lock()->getName() << " ";
+        	while(node != lastNode) {
+        		out << node->column->getName() << " ";
         		node = node->right;
         	}
-        	return out << std::endl;
+        	return out << lastNode->column->getName() << std::endl;
         }
 };
 
@@ -212,47 +206,68 @@ class IncidenceMatrix {
 			fillIn();
 		}
 
-		std::shared_ptr<NodeBase> findColumnWithLeastOnes() {
+		NodeBase* findColumnWithLeastOnes() {
 			int min = std::numeric_limits<int>::max();
-			std::shared_ptr<NodeBase> minColumn = nullptr;
+			NodeBase* minColumn = nullptr;
 
-			std::shared_ptr<NodeBase> column = headerRow.firstNode;
-			while(column) {
-				if(column->column.lock()->getSize() < min) minColumn = column;
+			NodeBase* column = headerRow.firstNode->right;
+			while(column != headerRow.firstNode) {
+				if(column->column->getSize() < min) minColumn = column;
 				column = column->right;
 			}
 			return minColumn;
 		}
 
-		void addRow(DoublyLinkedList row) {
-			auto node = row.firstNode;
-			while(node) {
-				assert(!node->column.expired());
+		NodeBase* getHead() {
+			return headerRow.firstNode;
+		}
 
-				node->column.lock()->increaseSize();
-				auto nodeAbove = node->column.lock()->up;
+		void addRow(DoublyLinkedList row) {
+			if(!row.firstNode) return;
+
+			auto node = row.firstNode;
+			while(node != row.lastNode) {
+				node->column->increaseSize();
+				auto nodeAbove = node->column->up;
 				node->up = nodeAbove;
-				nodeAbove.lock()->down = node;
-				node->column.lock()->up = node;
+				node->down = node->column;
+				nodeAbove->down = node;
+				node->column->up = node;
 				node = node->right;
+			}
+			row.lastNode->column->increaseSize();
+			auto nodeAbove = row.lastNode->column->up;
+			row.lastNode->up = nodeAbove;
+			row.lastNode->down = row.lastNode->column;
+			nodeAbove->down = row.lastNode;
+			row.lastNode->column->up = row.lastNode;
+		}
+
+		void cover(NodeBase* column) {
+			if(column->right->left == column) return;
+
+			column->right->left = column->left;
+			column->left->right = column->right;
+
+			for(NodeBase* row = column->down; row != column; row = row->down) {
+				for(NodeBase* rowTraverse = row->right; rowTraverse != row;
+						rowTraverse = rowTraverse->right) {
+					rowTraverse->up->down = rowTraverse->down;
+					rowTraverse->down->up = rowTraverse->up;
+					if(rowTraverse->up->down != rowTraverse)
+						rowTraverse->column->decreaseSize();
+				}
 			}
 		}
 
-		void cover(std::shared_ptr<NodeBase> column) {
-			if(column->right)
-				column->right->left = column->left;
-
-			assert(!column->left.expired());
-			column->left.lock()->right = column->right;
-			std::shared_ptr<NodeBase> row = column->down;
-			while(row) {
-				std::shared_ptr<NodeBase> runner = row;
-				while(runner) {
-					assert(!runner->up.expired());
-					runner->up.lock()->down = runner->down;
-					runner->down = runner->up.lock();
+		void uncover(NodeBase* column) {
+			for(NodeBase* row = column->up; row != column; row = row->up) {
+				for(NodeBase* rowTraverse = row->left; rowTraverse != row; 
+						rowTraverse = rowTraverse->left) {
+					rowTraverse->up->down = rowTraverse;
+					rowTraverse->down->up = rowTraverse;
+					rowTraverse->column->increaseSize();
 				}
-				column->column.lock()->decreaseSize();
 			}
 		}
 
@@ -263,31 +278,33 @@ class IncidenceMatrix {
 					{"V", V}, {"W", W}, {"F", F}, {"L", L}, {"P", P}, {"N", N},
 					{"Y", Y}};
 
-			auto headNode = std::shared_ptr<NodeColumn>(new NodeColumn("head"));
+			auto headNode = new NodeColumn("head");
 			headNode->column = headNode;
 			headNode->up = headNode;
-			headNode->setHead();
+			headNode->down = headNode;
 			headerRow.addRowNode(headNode);
 			map["head"] = headNode;
 
 			for(int i = 0; i < rectangle.first * rectangle.second; i++) {
 				std::string currentName  = std::to_string(i);
-				auto columnNode = std::shared_ptr<NodeColumn>(new NodeColumn(currentName));
+				auto columnNode = new NodeColumn(currentName);
 				columnNode->column = columnNode;
 				columnNode->up = columnNode;
+				columnNode->down = columnNode;
 				headerRow.addRowNode(columnNode);
 				map[currentName] = columnNode;
 			}
 
 			for(auto shape : shapes) {
-				auto columnNode = std::shared_ptr<NodeColumn>(new NodeColumn(shape.first));
+				auto columnNode = new NodeColumn(shape.first);
 				columnNode->column = columnNode;
 				columnNode->up = columnNode;
+				columnNode->down = columnNode;
 				headerRow.addRowNode(columnNode);
 				map[shape.first] = columnNode;
 			}
 		}
-		std::map<std::string, std::shared_ptr<NodeColumn>> map;
+		std::map<std::string, NodeColumn*> map;
 		DoublyLinkedList headerRow;
 		std::pair<int,int> rectangle;
 
@@ -324,16 +341,15 @@ class IncidenceMatrix {
 							for_each(shapeSerialised.begin(), shapeSerialised.end(), 
 									[&list, this](int& integer) {
 								std::string str = std::to_string(integer);
-								auto node = std::shared_ptr<NodeBase>(new NodeBase);
+								auto node = new NodeBase;
 								node->column = map[str];
-								assert(!node->column.expired());
 								list.addRowNode(node);
 							});
-							auto node = std::shared_ptr<NodeBase>(new NodeBase);
+							auto node = new NodeBase;
 							node->column = map[shape.first];
-							assert(!node->column.expired());
 							list.addRowNode(node);
 							addRow(list);
+							//std::cout << list;
 						}
 						x++;
 					}
@@ -382,14 +398,38 @@ class IncidenceMatrix {
 		}
 };
 
+void applyKnuthAlgo(IncidenceMatrix& matrix) {
+	if(matrix.getHead()->isCircular()) {std::cout << 1 << std::endl; return;};
+
+	NodeBase* column = matrix.findColumnWithLeastOnes();
+	matrix.cover(column);
+	NodeBase* row = column->getDown();
+	std::stack<NodeBase*> stack;
+	while(row != column) {
+		NodeBase* runner = row->getRight();
+		while(runner != row) {
+			stack.push(runner->getColumn());
+			matrix.cover(runner->getColumn());
+			runner = runner->getRight();
+		}
+
+		applyKnuthAlgo(matrix);
+
+		while(!stack.empty()) {
+			matrix.uncover(stack.top());
+			stack.pop();
+		}
+		row = row->getDown();
+	}
+	matrix.uncover(column);
+}
+
 int solve(std::pair<int,int> rectangle, bool shouldShow = false) {
     IncidenceMatrix matrix(rectangle);
+    applyKnuthAlgo(matrix);
     return 1;
 }
 
-void applyKnuthAlgo(IncidenceMatrix& matrix) {
-
-}
 
 void handler(int sig) {
   void *array[10];
@@ -406,6 +446,6 @@ void handler(int sig) {
 
 int main(int, char**) {
 	signal(SIGSEGV, handler);
-	solve({6,10});
+	solve({3,5});
 	return 0;
 }
