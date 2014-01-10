@@ -1,4 +1,4 @@
 interviews
 ==========
 
-Set of pretty standard solutions for questions commonly asked on an interview
+Set of pretty standard solutions for questions commonly asked at interviews.
