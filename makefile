@@ -27,5 +27,7 @@ out/treeShow : src/includes/smartTree.cpp
 
 out/searchTree : src/includes/smartSearchTree.cpp src/includes/smartTree.cpp src/includes/node.cpp src/includes/linkedlist.cpp
 
+out/heapSort : src/includes/heap.cpp
+
 clean:
 	rm out/*
