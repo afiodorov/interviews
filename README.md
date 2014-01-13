@@ -10,10 +10,10 @@ The solutions include:
 * Queue implemented using an array: ./src/includes/queue.cpp
 * Queue implemented using stacks: ./src/includes/stack.cpp
 * Tree class: ./src/includes/smartTree.cpp
-  * InOrder, PostOrder, PreOrder traversal using recursion
-  * PreOrder iterative traversal and a stack
-  * PreOrder iterative traversal using no stack (just parent pointer of each node)
-  * InOrder successor of a node
+  * In-order, Post-order, Pre-order traversal using recursion
+  * Pre-order iterative traversal and a stack
+  * Pre-order iterative traversal using no stack (just parent pointer of each node)
+  * In-order successor of a node
 * Binary Search Tree class: ./src/includes/smartSearchTree.cpp
   * insertion of a node 
   * deletion of a node
