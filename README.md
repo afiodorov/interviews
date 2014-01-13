@@ -21,7 +21,7 @@ The solutions include:
   * constructing a minimum height tree out of a vector: ./src/searchTree.cpp
   * building linked lists out of each tree depth level: ./src/searchTree.cpp
 * Towers of Hanoi recursive solution: ./src/towers.cpp
-* Three stacks implemeted using array: ./src/threeStacksOneArray.cpp
+* Three stacks implemeted using an array: ./src/threeStacksOneArray.cpp
 * Sorting stack elements using another stack: ./src/stacksort.cpp
 * Stack which remembers its minimum: ./src/stackMin.cpp
 * Primitive grep function: ./src/queries.cpp
