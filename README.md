@@ -4,7 +4,7 @@ Interviews
 Set of pretty standard solutions for questions commonly asked at interviews. All of it is written by me.
 The solutions include:
 * Simple heap implementation using std::vector as a storage: ./src/includes/heap.cpp
-* Heapsort: src/heapSort.cpp
+* Heapsort: ./src/heapSort.cpp
 * Singly linked list class: ./src/includes/linkedlist.cpp
 * Stack class: ./src/includes/stack.cpp
 * Queue implemented using an array: ./src/includes/queue.cpp
